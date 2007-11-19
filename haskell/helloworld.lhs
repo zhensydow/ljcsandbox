@@ -22,8 +22,7 @@
 \maketitle
 
 \begin{code}
-main = do
-  print "Hello World"
+main = print "Hello World"
 \end{code}
 
 \end{document}
