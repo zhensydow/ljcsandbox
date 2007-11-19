@@ -1,0 +1,18 @@
+Desde la linea de comandos:
+
+screen		crea una nueva ventana con un shell en ella
+screen -r	se conecta con una session anterior
+
+
+Comandos:
+
+CTRL-a d	se desconecta de la session actual
+CTRL-a S	divide la pantalla en dos regiones
+CTRL-a space	pasa a la siguiente ventana
+CTRL-a tab	pasa a la siguiente region
+CTRL-a "	muestra la lista de ventanas
+
+CTRL-a k	mata la ventana actual. Cuando se matan todas, termina screen
+CTRL-a X	mata la region actual
+
+CTRL-a c	crea una nueva ventana con shell
