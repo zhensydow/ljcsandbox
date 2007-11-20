@@ -22,6 +22,8 @@
 \maketitle
 
 \begin{code}
+-- Hello World in Haskell
+-- by Luis Jose Cabellos
 main = print "Hello World"
 \end{code}
 
