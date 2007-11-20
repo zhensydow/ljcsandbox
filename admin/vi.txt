@@ -1,0 +1,25 @@
+Modo comandos
+
+:wq	sale de vi salvando
+:!q	sale sin salvar
+i	pasa a modo edicion
+
+dd	corta la linea actual
+5dd	corta 5 lineas
+yy	copia la linea actual
+5yy	copia 5 lineas
+
+p	pega el buffer despues de la posicion actual
+P	pega el buffer antes de la posicion actual
+
+/cad	busca cad 
+n	busca la siguiente instancia de cad
+
+u	deshace el ultimo cambio
+
+	En general un numero n seguido de un comando repite n veces
+	el comando.
+
+Modo edicion
+
+ESC	pasa al modo comandos
