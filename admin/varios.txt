@@ -1,0 +1,1 @@
+chkconfig --list	ver la lista de servicios instalados
