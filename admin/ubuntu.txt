@@ -1,0 +1,3 @@
+ficheros a tener en cuenta
+
+/etc/modules	 modulos que se cargan al arrancar
