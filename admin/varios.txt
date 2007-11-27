@@ -1,1 +1,5 @@
 chkconfig --list	ver la lista de servicios instalados
+dpkg -L paquete		ver ficheros instalados por paquete
+lspci			mira el hardware de lus buses PCI
+
+!cad			ejecuta del historial el comando que comienze por ca

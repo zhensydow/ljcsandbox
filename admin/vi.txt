@@ -4,8 +4,10 @@ Modo comandos
 :!q	sale sin salvar
 i	pasa a modo edicion
 
+d	cortar
 dd	corta la linea actual
 5dd	corta 5 lineas
+y	copiar
 yy	copia la linea actual
 5yy	copia 5 lineas
 
@@ -20,6 +22,15 @@ u	deshace el ultimo cambio
 	En general un numero n seguido de un comando repite n veces
 	el comando.
 
+v	entrar en modo visual (seleccionar desde cursor)
+V	entrar en modo visual (seleccionar lineas)
+
 Modo edicion
 
 ESC	pasa al modo comandos
+CTRL+Q	Si lo trabo con comandos de Emacs (CTRL+S)
+
+Modo Visual
+
+u       poner en minusculas la seleccion
+U                mayusculas
