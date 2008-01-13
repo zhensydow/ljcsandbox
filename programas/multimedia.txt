@@ -1,0 +1,2 @@
+-- pasar de .mpg a .avi
+mencoder video.mpg -oac pcm -ovc lavc -lavcopts vcodec=xvid:mbd=2:trell:autoaspect -o video.avi
