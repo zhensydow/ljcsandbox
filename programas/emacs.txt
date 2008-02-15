@@ -1,0 +1,28 @@
+En los atajos de teclado
+C   equivale a Control
+M   equivale a ALT
+
+por ejemplo:
+C+x C+s			pulsar control+x y luego control+s
+M+x customize-face	pulsar ALT+x  y luego escribir customize-face y pulsar return
+
+
+C+x C+s	     Salvar fichero
+C+x C+f	     Abrir fichero
+C+x k	     cerrar buffer
+C+x b	     cambiar al buffer anterior
+C+x C+c	     cerrar emacs
+
+M+x <funcion>     ejecutar <funcion> de emacs
+M+!	     ejecutar comando shell
+
+C+x 1	     quitar pantalla partida
+C+x 2	     partir pantalla horizontalmente
+C+x 3	     partir pantalla verticalmente
+C+x o	     cambiar de pantalla
+
+C+space	     marca inicio de bloque, donde esta el cursor actualmente
+M+w	     copiar desde el inicio del bloque hasta posicion del cursor
+C+w	     cortar deste el inicio del bloque hasta posicion del cursor
+C+y	     pegar
+C+_	     undo
