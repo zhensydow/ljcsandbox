@@ -26,3 +26,26 @@ M+w	     copiar desde el inicio del bloque hasta posicion del cursor
 C+w	     cortar deste el inicio del bloque hasta posicion del cursor
 C+y	     pegar
 C+_	     undo
+
+
+
+
+Configuracion de .emacs
+
+;; configurar ficheros de backup
+(setq version-control t never)
+(setq delete-old-versions t)
+(setq backup-directory-alist (quote ((".*" . "~/.emacs_backups/"))))
+
+
+;; autocompletado (con diccionario sacado de los ficheros abiertos)
+(define-key global-map (read-kbd-macro "M-RET") 'hippie-expand)
+
+
+;; ocultar la barra de herramientas 
+(tool-bar-mode nil)
+
+
+;; configuraciones varias
+(line-number-mode 1)
+(column-number-mode 1)
