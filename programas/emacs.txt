@@ -32,25 +32,46 @@ C+_	     undo
 
 Configuracion de .emacs
 
+;; =============================================================================
 ;; configurar ficheros de backup
+;; =============================================================================
 (setq version-control t never)
 (setq delete-old-versions t)
 (setq backup-directory-alist (quote ((".*" . "~/.emacs_backups/"))))
 
 
+;; =============================================================================
 ;; autocompletado (con diccionario sacado de los ficheros abiertos)
+;; =============================================================================
 (define-key global-map (read-kbd-macro "M-RET") 'hippie-expand)
 
 
+;; =============================================================================
 ;; ocultar la barra de herramientas 
+;; =============================================================================
 (tool-bar-mode nil)
 
 
+;; =============================================================================
 ;; configuraciones varias
+;; =============================================================================
+(setq frame-title-format "emacs - %b")
+(setq inhibit-startup-message t)
 (line-number-mode 1)
 (column-number-mode 1)
+(display-time)
 
 
+;; =============================================================================
 ;; editar en remoto con ssh (requiere instalar tramp)
+;; =============================================================================
 (require 'tramp)
 (setq tramp-default-method "scp")
+
+
+;; =============================================================================
+;; Haskell
+;; =============================================================================
+(defun my-haskell-mode-hook ()
+  (turn-on-haskell-ghci))
+(add-hook 'haskell-mode-hook 'my-haskell-mode-hook)
