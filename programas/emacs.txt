@@ -1,11 +1,11 @@
 En los atajos de teclado
 C   equivale a Control
 M   equivale a ALT
+<RET> pulsar boton return
 
 por ejemplo:
 C+x C+s			pulsar control+x y luego control+s
-M+x customize-face	pulsar ALT+x  y luego escribir customize-face y pulsar return
-
+M+x funcion <RET>       pulsar ALT+x, escribir funcion y pulsar return
 
 C+x C+s	     Salvar fichero
 C+x C+f	     Abrir fichero
@@ -13,7 +13,9 @@ C+x k	     cerrar buffer
 C+x b	     cambiar al buffer anterior
 C+x C+c	     cerrar emacs
 
-M+x <funcion>     ejecutar <funcion> de emacs
+M+x <funcion> <RET>    ejecutar <funcion> de emacs
+M+x customize-face <RET>       ejecuta la seleccion de fuente
+M+x <len>-mode <RET>     cambiar el lenguaje actual a <len> ( p.e: c++-mode )
 M+!	     ejecutar comando shell
 
 C+x 1	     quitar pantalla partida
@@ -26,7 +28,6 @@ M+w	     copiar desde el inicio del bloque hasta posicion del cursor
 C+w	     cortar deste el inicio del bloque hasta posicion del cursor
 C+y	     pegar
 C+_	     undo
-
 
 
 

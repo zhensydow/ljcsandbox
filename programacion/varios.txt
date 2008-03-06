@@ -1,3 +1,5 @@
 ldd programa		muestra librerias usadas por programa	
 objdump			muestra informacion de archivos objeto
 objdump -t libbla.a	muestra la tabla de simbolos de libbla
+
+ldconfig -p		muestra todas las librerias del sistema

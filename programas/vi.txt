@@ -2,6 +2,12 @@ Modo comandos
 
 :wq	sale de vi salvando
 :!q	sale sin salvar
+
+:set number	 muestra el numero de linea
+:set nonumber	 oculta el numero de linea
+
+:%s/old/new/g	 sustituye old por new en todo el fichero
+
 i	pasa a modo edicion
 
 d	cortar
@@ -17,6 +23,9 @@ P	pega el buffer antes de la posicion actual
 /cad	busca cad 
 n	busca la siguiente instancia de cad
 
+?cad	marca cad en el documento
+#	marca la palabra apuntada por el cursor en el documento
+
 u	deshace el ultimo cambio
 
 	En general un numero n seguido de un comando repite n veces
@@ -28,7 +37,7 @@ V	entrar en modo visual (seleccionar lineas)
 Modo edicion
 
 ESC	pasa al modo comandos
-CTRL+Q	Si lo trabo con comandos de Emacs (CTRL+S)
+CTRL+Q	Si lo trabo con comandos de Emacs (p.e: CTRL+S)
 
 Modo Visual
 
