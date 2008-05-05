@@ -37,6 +37,7 @@ c   		(en ventana de estado) commit
 r		(en ventana de estado) revert
 u		(en ventana de estado) update
 l		(en ventana de estado) log
+$		(en ventana de estado) expande/oculta directorio
 
 
 
