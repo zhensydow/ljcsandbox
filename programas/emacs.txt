@@ -32,11 +32,12 @@ C+_	     undo
 Comandos de Subversion
 M+x svn-status  obtener estado de svn de un directorio
 C+x M+s s       obtener estado de svn de directorio actual
-C+x M+s s<RET>  (en ventana de estado) editar el fichero del cursor
+<RET>		(en ventana de estado) editar el fichero del cursor
 c   		(en ventana de estado) commit
 r		(en ventana de estado) revert
-u		(en ventana de estado) update
+U		(en ventana de estado) update
 l		(en ventana de estado) log
+=		(en ventana de estado) diff
 $		(en ventana de estado) expande/oculta directorio
 
 
