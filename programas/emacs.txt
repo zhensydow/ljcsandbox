@@ -59,12 +59,6 @@ Configuracion de .emacs
 
 
 ;; =============================================================================
-;; ocultar la barra de herramientas 
-;; =============================================================================
-(tool-bar-mode nil)
-
-
-;; =============================================================================
 ;; configuraciones varias
 ;; =============================================================================
 (setq frame-title-format "emacs - %b")
@@ -72,6 +66,14 @@ Configuracion de .emacs
 (line-number-mode 1)
 (column-number-mode 1)
 (display-time)
+(transient-mark-mode t)
+;; hide bars
+(tool-bar-mode -1)
+(menu-bar-mode -1)
+;; scroll just one line when hitting the bottom of the window
+(setq scroll-step 1)
+(setq scroll-conservatively 1)
+
 
 
 ;; =============================================================================
