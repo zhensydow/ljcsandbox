@@ -31,16 +31,17 @@ C+_	     undo
 
 Comandos de Subversion
 M+x svn-status  obtener estado de svn de un directorio
-C+x M+s s       obtener estado de svn de directorio actual
-g		(en ventana de estado) actualizar ventana
-<RET>		(en ventana de estado) editar el fichero del cursor
-c   		(en ventana de estado) commit
-r		(en ventana de estado) revert
-U		(en ventana de estado) update
-l		(en ventana de estado) log
-=		(en ventana de estado) diff
-$		(en ventana de estado) expande/oculta directorio
-
+C+x M+s s       obtener estado de svn de directorio actual abre *svn-status*
+g		(*svn-status*) actualizar ventana
+<RET>		(*svn-status*) editar el fichero del cursor
+m		(*svn-status*) marca archivo selecionado
+u		(*svn-status*) quita marca en archivo seleccionado
+c   		(*svn-status*) commit (archivos marcados si hay)
+r		(*svn-status*) revert
+U		(*svn-status*) update
+l		(*svn-status*) log
+=		(*svn-status*) diff
+$		(*svn-status*) expande/oculta directorio
 
 
 Configuracion de .emacs
