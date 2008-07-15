@@ -1,0 +1,14 @@
+instalar
+	sudo apt-get install rxvt-unicode
+
+
+archivo de configuracion ~/.Xdefaults
+URxvt.depth: 24
+URxvt.background: Black
+URxvt.foreground: White
+URxvt.transparent: true
+URxvt.shading: 20
+URxvt.fading: 50
+URxvt.termName: rxvt
+
+
