@@ -29,6 +29,11 @@ C+w	     cortar deste el inicio del bloque hasta posicion del cursor
 C+y	     pegar
 C+_	     undo
 
+C-x r k	     cortar el rectangulo seleccionado
+C-x r d	     borrar el rectangulo seleccionad
+C-x r y	     copiar el rectangulo seleccionado
+C-x r c	     limpiar el rectangulo seleccionado
+
 Comandos de Subversion
 M+x svn-status  obtener estado de svn de un directorio
 C+x M+s s       obtener estado de svn de directorio actual abre *svn-status*
