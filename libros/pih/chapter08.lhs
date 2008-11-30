@@ -1,4 +1,7 @@
 Parser
+\begin{code}
+module Chapter08 where
+\end{code}
 
 \begin{code}
 import Data.Char
