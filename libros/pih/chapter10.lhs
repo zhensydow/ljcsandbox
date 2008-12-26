@@ -180,3 +180,68 @@ substs p = map (zip vs) (bools $ length vs)
 isTaut :: Prop -> Bool
 isTaut p = and [eval s p| s <- substs p]
 \end{code}
+
+Abstract Machine
+
+\begin{code}
+data Expr = Val Int | Add Expr Expr | Mul Expr Expr
+instance Show Expr where
+    show (Val n) = show n
+    show (Add p q) = "(" ++ (show p) ++ "+" ++ (show q) ++ ")"
+    show (Mul p q) = "(" ++ (show p) ++ "*" ++ (show q) ++ ")"
+\end{code}
+
+\begin{code}
+value (Val n) = n
+value (Add p q) = (value p) + (value q)
+value (Mul p q) = (value p) * (value q)
+\end{code}
+
+\begin{code}
+type Cont = [Op]
+data Op = EVALA Expr | EVALM Expr | ADD Int | MUL Int
+\end{code}
+
+\begin{code}
+evale :: Expr -> Cont -> Int
+evale (Val n) xs = exec xs n
+evale (Add x y) xs = evale x (EVALA y:xs)
+evale (Mul x y) xs = evale x (EVALM y:xs)
+\end{code}
+
+\begin{code}
+exec :: Cont -> Int -> Int
+exec [] n = n
+exec (EVALA x:xs) n = evale x (ADD n:xs)
+exec (EVALM x:xs) n = evale x (MUL n:xs)
+exec (ADD x:xs) n = exec xs (x + n)
+exec (MUL x:xs) n = exec xs (x * n)
+\end{code}
+
+\begin{code}
+valuee e = evale e []
+\end{code}
+
+\begin{code}
+exp1 = Add (Add (Val 2) (Val 3)) (Val 4)
+exp2 = Add (Mul (Val 2) (Val 3)) (Val 4)
+\end{code}
+
+\begin{code}
+class MiMonad m where
+    devuelve :: a -> m a
+    bind :: m a -> (a -> m b)  -> m b
+\end{code}
+
+\begin{code}
+instance MiMonad Maybe where
+    devuelve x = Just x
+    bind Nothing _ = Nothing
+    bind (Just x) f = f x
+\end{code}
+
+\begin{code}
+instance MiMonad [] where
+    devuelve x = [x]
+    bind xs f = concatMap f xs
+\end{code}
