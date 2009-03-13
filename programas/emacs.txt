@@ -7,10 +7,13 @@ por ejemplo:
 C+x C+s			pulsar control+x y luego control+s
 M+x funcion <RET>       pulsar ALT+x, escribir funcion y pulsar return
 
+C+g          Cancelar un comando
+
 C+x C+s	     Salvar fichero
 C+x C+f	     Abrir fichero
 C+x k	     cerrar buffer
 C+x b	     cambiar al buffer anterior
+C+x C+b	     listar buffers abiertos
 C+x C+c	     cerrar emacs
 
 M+x <funcion> <RET>    ejecutar <funcion> de emacs
@@ -33,6 +36,8 @@ C+x r k	     cortar el rectangulo seleccionado
 C+x r d	     borrar el rectangulo seleccionad
 C+x r y	     copiar el rectangulo seleccionado
 C+x r c	     limpiar el rectangulo seleccionado
+
+C+h b 	     muestra los accesos de teclados actuales
 
 Comandos de Subversion
 M+x svn-status  obtener estado de svn de un directorio
@@ -81,6 +86,17 @@ Configuracion de .emacs
 (setq scroll-conservatively 1)
 
 
+;; =============================================================================
+;; Highlight changes in buffer
+;; =============================================================================
+(defun clear-highlight ()
+  (interactive)
+  (if (boundp 'highlight-changes-mode)
+      (highlight-changes-remove-highlight (point-min) (point-max))))
+
+(define-key global-map (read-kbd-macro "<f3>") 'highlight-changes-mode)
+(define-key global-map (read-kbd-macro "<f4>") 'clear-highlight)
+
 
 ;; =============================================================================
 ;; editar en remoto con ssh (requiere instalar tramp)
@@ -95,6 +111,13 @@ Configuracion de .emacs
 (defun my-haskell-mode-hook ()
   (turn-on-haskell-ghci))
 (add-hook 'haskell-mode-hook 'my-haskell-mode-hook)
+
+;; =============================================================================
+;; LATEX
+;; =============================================================================
+(add-hook 'latex-mode-hook 'longlines-mode)
+(add-hook 'latex-mode-hook 'highlight-changes-mode)
+(add-hook 'latex-mode-hook 'flyspell-mode)
 
 ;; =============================================================================
 ;; Imprimir
