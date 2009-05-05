@@ -1,7 +1,10 @@
 Desde la linea de comandos:
 
 screen		crea una nueva ventana con un shell en ella
-screen -r	se conecta con una session anterior
+screen -r	se conecta con una session anterior sin attach
+       		si no saca la lista de sessions con attach
+screen -x 	se conecta a una session con attach
+
 
 
 Comandos:
