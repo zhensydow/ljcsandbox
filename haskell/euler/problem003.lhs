@@ -1,17 +1,36 @@
 \begin{code}
-primes = sieve [2..]
-    where sieve (p:xs) = p : sieve [x | x<-xs, x `mod` p /= 0]
+primes :: [Integer]
+primes = 2:3:primes'
+  where
+    1:p:candidates = [6*k+r | k <- [0..], r <- [1,5]]
+    primes' = p : filter isPrime candidates
+    isPrime n = all (not . divides n) $ takeWhile (\p -> p*p <= n) primes'
+    divides n p = n `mod` p == 0
 \end{code}
 
 \begin{code}
+number :: Integer
 number = 600851475143
-sqNumber = ceiling $ sqrt number
+
+sqNumber = ceiling $ sqrt $ fromInteger number
 \end{code}
 
 \begin{code}
-isPrime n = isPrime' n $ ceiling $ sqrt number
-    where isPrime' _ 1 = True
-          isPrime' n p
-              | n `mod` p == 0 = False
-              | otherwise = isPrime' n (p-1)
+testList = reverse $ takeWhile (<sqNumber) primes
+\end{code}
+
+\begin{code}
+checkLargest :: [Integer] -> Integer
+checkLargest [] = error "no prime"
+checkLargest (x:xs)
+    | number `mod` x == 0 = x
+    | otherwise = checkLargest xs
+\end{code}
+
+\begin{code}
+solution = checkLargest testList
+\end{code}
+
+\begin{code}
+main = print solution
 \end{code}
