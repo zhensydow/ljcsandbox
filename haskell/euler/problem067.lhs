@@ -107,7 +107,7 @@ split (x:y:xs) = [x,y]:split (y:xs)
 \end{code}
 
 \begin{code}
-prepare xs = map maximum $ split xs
+prepare = map maximum . split
 \end{code}
 
 \begin{code}
