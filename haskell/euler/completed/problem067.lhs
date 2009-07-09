@@ -119,3 +119,7 @@ calc (x:y:xs) = calc (p:xs)
 \begin{code}
 solution = head $ calc triangle
 \end{code}
+
+\begin{code}
+main = print solution
+\end{code}
