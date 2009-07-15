@@ -1,10 +1,5 @@
 \begin{code}
-import Data.Char( digitToInt )
-\end{code}
-
-\begin{code}
-digits :: Int -> [Int]
-digits = map digitToInt . show
+import Euler( digits )
 \end{code}
 
 \begin{code}

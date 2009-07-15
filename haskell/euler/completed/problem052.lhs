@@ -1,13 +1,7 @@
 \begin{code}
+import Euler( digits )
 import Data.List( sort )
 import Control.Arrow( (&&&) )
-\end{code}
-
-\begin{code}
-digits n = reverse $ digits' n
-    where digits' n
-              | n < 10 = [n]
-              | otherwise = n `mod` 10 : (digits' $ n `div` 10)
 \end{code}
 
 \begin{code}

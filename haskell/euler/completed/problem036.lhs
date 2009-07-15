@@ -1,10 +1,5 @@
 \begin{code}
-import Data.Char
-\end{code}
-
-\begin{code}
-digits :: Int -> [Int]
-digits = map digitToInt . show
+import Euler( digits )
 \end{code}
 
 \begin{code}
@@ -24,4 +19,8 @@ numbers = filter (palin.digitsbin) $ filter (palin.digits) [1..1000000]
 
 \begin{code}
 solution = sum numbers
+\end{code}
+
+\begin{code}
+main = print solution
 \end{code}

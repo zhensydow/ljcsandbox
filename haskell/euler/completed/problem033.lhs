@@ -1,11 +1,6 @@
 \begin{code}
-import Data.Char( digitToInt )
+import Euler( digits )
 import Data.Ratio( (%), denominator )
-\end{code}
-
-\begin{code}
-digits :: Int -> [Int]
-digits = map digitToInt . show
 \end{code}
 
 \begin{code}

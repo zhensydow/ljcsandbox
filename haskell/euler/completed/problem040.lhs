@@ -1,8 +1,5 @@
 \begin{code}
-digits n = reverse $ digits' n
-    where digits' n
-              | n < 10 = [n]
-              | otherwise = n `mod` 10 : (digits' $ n `div` 10)
+import Euler( digits )
 \end{code}
 
 \begin{code}

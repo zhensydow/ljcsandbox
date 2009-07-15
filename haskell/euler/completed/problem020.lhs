@@ -1,8 +1,5 @@
 \begin{code}
-digits n = reverse $ digits' n
-    where digits' n
-              | n < 10 = [n]
-              | otherwise = n `mod` 10 : (digits' $ n `div` 10)
+import Euler( digits )
 \end{code}
 
 \begin{code}
@@ -12,4 +9,8 @@ factorial m@(n+1) = m * factorial n
 
 \begin{code}
 solution = sum $ digits $ factorial 100
+\end{code}
+
+\begin{code}
+main = print solution
 \end{code}

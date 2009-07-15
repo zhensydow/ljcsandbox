@@ -1,16 +1,6 @@
 \begin{code}
-import Data.Char( digitToInt )
+import Euler( digits, toint )
 import Data.List( intersperse )
-\end{code}
-
-\begin{code}
-digits :: Integer -> [Int]
-digits = map digitToInt . show
-\end{code}
-
-\begin{code}
-toint :: [Int] -> Integer
-toint = foldl (\a b-> a * 10 + (toInteger b)) 0
 \end{code}
 
 \begin{code}

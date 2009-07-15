@@ -1,4 +1,8 @@
 \begin{code}
+import Euler( toint )
+\end{code}
+
+\begin{code}
 selections :: [a] -> [(a,[a])]
 selections [] = []
 selections (x:xs) = (x, xs) : [(y, x:ys) | (y,ys) <- selections xs]
@@ -29,12 +33,7 @@ isPrime n = all (not . divides n) $ takeWhile (\p -> p*p <= n) primes
 \end{code}
 
 \begin{code}
-listToInt :: [Integer] -> Integer
-listToInt = foldl (\a b -> a * 10 + b) 0
-\end{code}
-
-\begin{code}
-pandigits n = map listToInt $ permutations [1..n]
+pandigits n = map toint $ permutations [1..n]
 \end{code}
 
 \begin{code}
@@ -47,4 +46,8 @@ panprimes = filter isPrime allpans
 
 \begin{code}
 solution = maximum panprimes
+\end{code}
+
+\begin{code}
+main = print solution
 \end{code}

@@ -1,10 +1,5 @@
 \begin{code}
-import Data.Char( digitToInt )
-\end{code}
-
-\begin{code}
-digits :: Int -> [Int]
-digits = map digitToInt . show
+import Euler( digits )
 \end{code}
 
 \begin{code}
@@ -19,4 +14,8 @@ lastseq n = lastseq (next n)
 
 \begin{code}
 solution = length . filter (==89) . map lastseq $ [1..9999999]
+\end{code}
+
+\begin{code}
+main = print solution
 \end{code}

@@ -1,5 +1,6 @@
 \begin{code}
 import Data.List( sort )
+import Euler( digits, toint )
 \end{code}
 
 \begin{code}
@@ -26,18 +27,6 @@ numbers = [ [x,x+3330,x+3330+3330] | x <- [1000..3339]
 \end{code}
 
 \begin{code}
-digits n = reverse $ digits' n
-    where digits' n
-              | n < 10 = [n]
-              | otherwise = n `mod` 10 : (digits' $ n `div` 10)
-\end{code}
-
-\begin{code}
-listToInt :: [Integer] -> Integer
-listToInt = foldl (\a b -> a * 10 + b) 0
-\end{code}
-
-\begin{code}
 same x y = (sort $ digits x) == (sort $ digits y)
 \end{code}
 
@@ -51,5 +40,9 @@ sequences = filter check numbers
 \end{code}
 
 \begin{code}
-solution = listToInt $ concatMap digits $ head $ filter ((/=1487).head) sequences
+solution = toint $ concatMap digits $ head $ filter ((/=1487).head) sequences
+\end{code}
+
+\begin{code}
+main = print solution
 \end{code}
