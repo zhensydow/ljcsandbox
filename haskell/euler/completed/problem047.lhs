@@ -1,30 +1,6 @@
 \begin{code}
-import qualified Data.Map as DM
+import Euler( primeDecomp )
 import Control.Arrow ((&&&))
-\end{code}
-
-\begin{code}
-nextPrime i 
-    | i `mod` 6 == 1 = i + 4
-    | otherwise = i + 2
-\end{code}
-
-\begin{code}
-primesPlus = 2:3:iterate nextPrime 5
-\end{code}
-
-\begin{code}
-primeDecomp n = DM.toList $ primeDecomp' n primesPlus DM.empty
-primeDecomp' :: Integer -> [Integer] -> DM.Map Integer Integer -> DM.Map Integer Integer
-primeDecomp' 1 _ d = d
-primeDecomp' n (p:ps) d
-    | n `mod` p == 0 = primeDecomp' (n `div` p) (p:ps) (incDic d p)
-    | otherwise = primeDecomp' n ps d
-\end{code}
-
-\begin{code}
-incDic :: (Ord k, Num a) => DM.Map k a -> k -> DM.Map k a
-incDic d k = DM.insert k (maybe 1 (+1) (DM.lookup k d)) d
 \end{code}
 
 \begin{code}
@@ -50,4 +26,8 @@ checkf4 (x:y:z:w:xs)
     | (w - z) > 1 = checkf4 (w:xs)
     | (w - y) > 2 = checkf4 (z:w:xs)
     | otherwise = checkf4 (y:z:w:xs)
+\end{code}
+
+\begin{code}
+main = print . checkf4 $ numbers 4
 \end{code}
