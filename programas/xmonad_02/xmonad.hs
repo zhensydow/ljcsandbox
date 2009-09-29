@@ -84,7 +84,7 @@ myKeys conf@(XConfig {modMask = modm}) =
          , ((modm .|. shiftMask, xK_s), submap $ searchMap $ Search.selectSearch) ]
 
 internetMap = M.fromList $
-              [ ((0, xK_f), spawn "firefox" )
+              [ ((0, xK_f), spawn "chromium-browser --enable-plugins" )
               , ((0, xK_p), spawn "pidgin" )
               , ((0, xK_s), sshPrompt defaultXPConfig ) ]
 
@@ -117,10 +117,10 @@ myLayout = onWorkspace web (avoidStruts $ smartBorders myTabbed) $
       myTabbed = tabbed shrinkText myTabConfig
 
 myTabConfig = defaultTheme 
-              { activeColor = "#000000"
-              , activeTextColor = "#00FF00"
-              , activeBorderColor = "#aaFFaa"
-              , inactiveColor = "#333333"
-              , inactiveTextColor = "#777777"
-              , inactiveBorderColor = "#FF0000"
+              { activeColor = "#007046"
+              , activeTextColor = "#FFFFFF"
+              , activeBorderColor = "#20815D"
+              , inactiveColor = "#0C0874"
+              , inactiveTextColor = "#AAAAAA"
+              , inactiveBorderColor = "#333086"
               , decoHeight = 12 }
