@@ -1,23 +1,24 @@
 import XMonad
-import qualified XMonad.StackSet as W
+import qualified XMonad.StackSet as W( focusDown, focusUp
+                                     , greedyView )
 import XMonad.Layout.Tabbed
-import XMonad.Actions.CycleWS
-import XMonad.Layout.NoBorders
-import XMonad.Layout.PerWorkspace
+import XMonad.Actions.Submap( submap )
+import XMonad.Actions.Search as Search
+import XMonad.Actions.CycleWS( prevWS, nextWS
+                             , shiftToPrev, shiftToNext, toggleWS )
+import XMonad.Layout.NoBorders( noBorders, smartBorders )
+import XMonad.Layout.PerWorkspace( onWorkspace )
 import XMonad.Layout.ShowWName
 import XMonad.Layout.LayoutCombinators((*/*))
-import XMonad.Layout.Gaps
+import XMonad.Layout.Gaps 
 import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.ManageDocks
-import XMonad.Prompt
-import XMonad.Prompt.AppLauncher as AL
-import XMonad.Util.Run(spawnPipe)
-import XMonad.Util.Themes
-import XMonad.Prompt.Ssh
-import XMonad.Actions.Submap
-import XMonad.Actions.Search as Search
-import System.IO
-import qualified Data.Map as M
+import XMonad.Hooks.ManageDocks( manageDocks, avoidStruts
+                               , ToggleStruts(..) )
+import XMonad.Prompt( defaultXPConfig )
+import XMonad.Prompt.Ssh( sshPrompt )
+import XMonad.Util.Run( spawnPipe )
+import System.IO( hPutStrLn )
+import qualified Data.Map as M( union, fromList )
 
 main = do
   xmproc <- spawnPipe "/usr/local/bin/xmobar /home/cabellos/.xmonad/xmobar"
@@ -81,7 +82,9 @@ myKeys conf@(XConfig {modMask = modm}) =
          , ((modm, xK_Tab), toggleWS) 
          -- Busquedas
          , ((modm, xK_s), submap $ searchMap $ Search.promptSearch defaultXPConfig) 
-         , ((modm .|. shiftMask, xK_s), submap $ searchMap $ Search.selectSearch) ]
+         , ((modm .|. shiftMask, xK_s), submap $ searchMap $ Search.selectSearch) 
+         -- Salir
+         , ((modm .|. shiftMask, xK_F12), spawn "/usr/bin/gnome-power-cmd suspend") ]
 
 internetMap = M.fromList $
               [ ((0, xK_f), spawn "chromium-browser --enable-plugins" )
