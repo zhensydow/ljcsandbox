@@ -38,16 +38,27 @@ mySWNConfig = defaultSWNConfig
               , swn_fade    = 1/4 }
 
 myLayout = avoidStruts $ smartBorders $
-           onWorkspace webName simpleTabbedAlways $ 
+           onWorkspace webName myTabbed $ 
            onWorkspace altName (Mirror tiled ||| simpleTabbed) $
            tiled ||| Mirror tiled ||| simpleTabbed
     where
       tiled = Tall 1 0.03 (1/2)
+      myTabbed = tabbed shrinkText myTabConfig
+
+myTabConfig = defaultTheme 
+              { activeColor = "#007046"
+              , activeTextColor = "#FFFFFF"
+              , activeBorderColor = "#20815D"
+              , inactiveColor = "#0C0874"
+              , inactiveTextColor = "#AAAAAA"
+              , inactiveBorderColor = "#333086"
+              , decoHeight = 12 }
 
 myKeys conf@(XConfig {modMask = modm}) = 
     M.fromList $
          -- Lanzar aplicaciones comunes
-         [ ((modm, xK_e), spawn "emacs" ) 
+         [ ((modm, xK_e), spawn "emacs" )
+         , ((modm .|. controlMask, xK_l), spawn "xscreensaver-command -lock" )
          -- Full Screen
          , ((modm, xK_b), sendMessage ToggleStruts )
          -- Configuracion para navegar entre ventanas
