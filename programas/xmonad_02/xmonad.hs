@@ -88,7 +88,7 @@ myKeys conf@(XConfig {modMask = modm}) =
 
 internetMap = M.fromList $
               [ ((0, xK_f), spawn "chromium-browser --enable-plugins" )
-              , ((0, xK_p), spawn "pidgin" )
+              , ((0, xK_p), spawn "ssh -X ozzy.ifca.es pidgin" )
               , ((0, xK_s), sshPrompt defaultXPConfig ) ]
 
 mySearch s = do

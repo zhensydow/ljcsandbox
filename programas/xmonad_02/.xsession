@@ -2,9 +2,11 @@ trayer --edge top --align right --SetDockType true --SetPartialStrut true --expa
 
 xscreensaver &
 
-xpmroot ~/imgs/fondos/gato01.png &
+xpmroot ~/Dropbox/imgs/fondos/perro01.png &
 
 gnome-power-manager &
-wicd-client &
+nm-applet &
+ubuntuone-client-applet &
+dropbox start&
 
 xmonad
