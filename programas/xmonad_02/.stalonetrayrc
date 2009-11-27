@@ -1,0 +1,5 @@
+background "#191970"
+decorations none
+geometry 96x16+928-752
+icon_size 16
+sticky true
