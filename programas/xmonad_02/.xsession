@@ -12,4 +12,4 @@ stalonetray &
 
 xpmroot ~/Dropbox/imgs/fondos/perro01.png &
 
-bin/conky_start.sh &
+.xmonad/conky_start.sh &
