@@ -29,9 +29,9 @@ import System.IO( hPutStrLn )
 import qualified Data.Map as M( union, fromList )
 
 main = do
-  xmproc <- spawnPipe "/usr/local/bin/xmobar /home/cabellos/.xmonad/xmobar"
+  xmproc <- spawnPipe "exec /usr/local/bin/xmobar /home/cabellos/.xmonad/xmobar"
   xmonad $ defaultConfig
-       { terminal = "urxvt" 
+       { terminal = "exec urxvt" 
        , manageHook = (composeOne [ resource =? "stalonetray" -?> doIgnore ]) <+> manageDocks <+> manageHook defaultConfig
        , layoutHook = showWName' mySWNConfig myLayout
        , workspaces = myWorkspaces
@@ -91,14 +91,14 @@ mySWNConfig = defaultSWNConfig
 myKeys conf@(XConfig {modMask = modm}) = 
     M.fromList $
          -- Lanzar aplicaciones comunes
-         [ ((modm, xK_e), spawn "emacs" ) 
+         [ ((modm, xK_e), spawn "exec emacs" ) 
          , ((modm, xK_i), submap internetMap )
-         , ((modm .|. shiftMask, xK_e), spawn "emacs ~/.xmonad/xmonad.hs" )
-         , ((modm, xK_n), spawn "thunar" )
-         , ((modm .|. controlMask, xK_l), spawn "xscreensaver-command -lock" )
-         , ((modm, xK_m), spawn "urxvt -e sm" )
-         , ((modm, xK_d), spawn "(echo Calendario; cal; sleep 8) | dzen2 -x 30 -y 30 -w 160 -bg '#aaffaa' -fg black -l 8 -e onstart=togglecollapse &" )
-         , ((modm, xK_a), spawn "urxvt -e aumix" )
+         , ((modm .|. shiftMask, xK_e), spawn "exec emacs ~/.xmonad/xmonad.hs" )
+         , ((modm, xK_n), spawn "exec thunar" )
+         , ((modm .|. controlMask, xK_l), spawn "exec xscreensaver-command -lock" )
+         , ((modm, xK_m), spawn "exec urxvt -e sm" )
+         , ((modm, xK_d), spawn "exec (echo Calendario; cal; sleep 8) | dzen2 -x 30 -y 30 -w 160 -bg '#aaffaa' -fg black -l 8 -e onstart=togglecollapse &" )
+         , ((modm, xK_a), spawn "exec urxvt -e aumix" )
          -- Full Screen
          , ((modm, xK_b), do
                sendMessage ToggleStruts 
@@ -118,8 +118,8 @@ myKeys conf@(XConfig {modMask = modm}) =
          ]
 
 internetMap = M.fromList $
-              [ ((0, xK_f), spawn "chromium-browser --enable-plugins" )
-              , ((0, xK_p), spawn "ssh -X ozzy.ifca.es pidgin" )
+              [ ((0, xK_f), spawn "exec chromium-browser --enable-plugins" )
+              , ((0, xK_p), spawn "exec ssh -X ozzy.ifca.es pidgin" )
               , ((0, xK_s), sshPrompt defaultXPConfig ) ]
 
 mySearch s = do
