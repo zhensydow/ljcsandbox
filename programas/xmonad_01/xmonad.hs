@@ -1,49 +1,57 @@
-import XMonad
-import qualified XMonad.StackSet as W
-import XMonad.Actions.CycleWS
-import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.ManageDocks
-import XMonad.Util.Run(spawnPipe)
-import XMonad.Layout.Tabbed
-import XMonad.Layout.NoBorders
-import XMonad.Layout.ShowWName
-import XMonad.Layout.PerWorkspace
-import System.IO
-import qualified Data.Map as M
+import XMonad( terminal, workspaces, manageHook, layoutHook, logHook, (<+>), modMask, controlMask, mod4Mask, focusFollowsMouse 
+             , Full(..), Mirror(..), Tall(..), (|||) )
+import XMonad.Main( xmonad )
+import XMonad.Config( defaultConfig )
+import XMonad.ManageHook( resource, doIgnore, (=?) )
+import XMonad.Util.Run( spawnPipe )
+import XMonad.Hooks.DynamicLog( dynamicLogWithPP, PP(..), xmobarColor, xmobarPP, wrap, shorten )
+import XMonad.Hooks.ManageDocks( manageDocks, avoidStruts, ToggleStruts(..)  )
+import XMonad.Hooks.ManageHelpers( composeOne, (-?>) )
+import XMonad.Layout.Gaps( GapMessage(..), gaps, Direction2D(..) )
+import XMonad.Layout.ShowWName( showWName', defaultSWNConfig, SWNConfig(..) )
+import XMonad.Layout.PerWorkspace( onWorkspace )
+import XMonad.Layout.NoBorders( smartBorders )
+import XMonad.Layout.Tabbed( tabbed, defaultTheme, shrinkText, Theme(..) )
+import System.IO( hPutStrLn )
 
 main = do
-  xmproc <- spawnPipe "/usr/local/bin/xmobar /home/cabellos/.xmonad/xmobar"
+  xmproc <- spawnPipe "exec /usr/local/bin/xmobar /home/cabellos/.xmonad/xmobar"
   xmonad $ defaultConfig
-       { manageHook = manageDocks <+> manageHook defaultConfig
-       , layoutHook = showWName' mySWNConfig $ avoidStruts $ myLayout
-       , logHook = dynamicLogWithPP $ xmobarPP
-                   { ppOutput = hPutStrLn xmproc
+       { terminal           = "exec urxvt"
+       , manageHook = (composeOne [ resource =? "stalonetray" -?> doIgnore ]) <+> manageDocks <+> manageHook defaultConfig
+       , layoutHook = showWName' mySWNConfig myLayout
+       , workspaces = myWorkspaces
+
+       -- xmobar configuration
+       , logHook = dynamicLogWithPP $ xmobarPP 
+                   { ppOutput = hPutStrLn xmproc . wrap "< " " >"
+                   , ppCurrent = xmobarColor "yellow" "" . (wrap "[" "]" ) . (drop 2)
+                   , ppVisible = (\_->"")
+                   , ppHidden = xmobarColor "red" "" . (take 1)
+                   , ppHiddenNoWindows = take 1
+                   , ppLayout = (\_->"")
+                   , ppUrgent = (\_->"")
+                   , ppSep = " >-< "
                    , ppTitle = xmobarColor "green" "" . shorten 50 }
+
        -- keys
        , modMask = mod4Mask 
-       , keys = \c -> myKeys c `M.union` keys defaultConfig c
-       , terminal           = "urxvt"
-       , workspaces = myWorkspaces
        , focusFollowsMouse  = False }
 
-webName = "1:web"
-altName = "2:altamira"
-myWorkspaces = [
- webName,altName,"3:apps01",
- "4:apps02","5:apps03", "6:pidgin"]
+
+web = "1:web"
+myWorkspaces = [ web,"2:code1","3:code2","4:apps", "5:apps" ]
+
+myLayout = onWorkspace web (gaps [(U,16)] $ avoidStruts $ smartBorders myTabbed) $
+           gaps [(U,16)] $ avoidStruts $ smartBorders $ (normalTiled ||| Mirror normalTiled ||| myTabbed)
+    where
+      normalTiled = Tall 1 (2/100) (1/2)
+      myTabbed = tabbed shrinkText myTabConfig
 
 mySWNConfig = defaultSWNConfig
-              { swn_font    = "-misc-fixed-*-*-*-*-14-*-*-*-*-*-*-*"
+              { swn_font    = "-misc-fixed-*-*-*-*-12-*-*-*-*-*-*-*"
               , swn_color   = "green"
               , swn_fade    = 1/4 }
-
-myLayout = avoidStruts $ smartBorders $
-           onWorkspace webName myTabbed $ 
-           onWorkspace altName (Mirror tiled ||| simpleTabbed) $
-           tiled ||| Mirror tiled ||| simpleTabbed
-    where
-      tiled = Tall 1 0.03 (1/2)
-      myTabbed = tabbed shrinkText myTabConfig
 
 myTabConfig = defaultTheme 
               { activeColor = "#007046"
@@ -53,17 +61,3 @@ myTabConfig = defaultTheme
               , inactiveTextColor = "#AAAAAA"
               , inactiveBorderColor = "#333086"
               , decoHeight = 12 }
-
-myKeys conf@(XConfig {modMask = modm}) = 
-    M.fromList $
-         -- Lanzar aplicaciones comunes
-         [ ((modm, xK_e), spawn "emacs" )
-         , ((modm .|. controlMask, xK_l), spawn "xscreensaver-command -lock" )
-         -- Full Screen
-         , ((modm, xK_b), sendMessage ToggleStruts )
-         -- Configuracion para navegar entre ventanas
-         , ((modm, xK_Left), prevWS ) 
-         , ((modm, xK_Right), nextWS ) 
-         , ((modm, xK_Down  ), windows W.focusDown)
-         , ((modm, xK_Up    ), windows W.focusUp) 
-         , ((modm, xK_Tab), toggleWS) ]
