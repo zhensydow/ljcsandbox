@@ -84,7 +84,8 @@ Configuracion de .emacs
 ;; scroll just one line when hitting the bottom of the window
 (setq scroll-step 1)
 (setq scroll-conservatively 1)
-
+;; use spaces instead of tabs
+(setq-default indent-tabs-mode nil)
 
 ;; =============================================================================
 ;; Highlight changes in buffer
@@ -108,9 +109,23 @@ Configuracion de .emacs
 ;; =============================================================================
 ;; Haskell
 ;; =============================================================================
+(setq auto-mode-alist
+      (append auto-mode-alist
+              '(("\\.[hg]s$"  . haskell-mode)
+                ("\\.hi$"     . haskell-mode)
+                ("\\.l[hg]s$" . literate-haskell-mode))))
+(autoload 'haskell-mode "haskell-mode"
+   "Major mode for editing Haskell scripts." t)
+(autoload 'literate-haskell-mode "haskell-mode"
+   "Major mode for editing literate Haskell scripts." t)
+
 (defun my-haskell-mode-hook ()
+  (turn-on-font-lock)
+  (turn-on-haskell-decl-scan)
+;;  (turn-on-haskell-doc)
   (turn-on-haskell-ghci))
 (add-hook 'haskell-mode-hook 'my-haskell-mode-hook)
+
 
 ;; =============================================================================
 ;; LATEX
