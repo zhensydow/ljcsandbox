@@ -1,5 +1,6 @@
 \begin{code}
 {-# LANGUAGE ScopedTypeVariables #-}
+module ControlledVisit( Info(..), traverse, traverseFilter, getUsefulContents, getInfo, isDirectory, myTest ) where
 \end{code}
 
 \begin{code}
@@ -7,6 +8,8 @@ import System.Directory( Permissions(..), getPermissions, getModificationTime, g
 import System.FilePath( (</>), takeExtension )
 import System.Time( ClockTime(..) )
 import System.IO( IOMode(..), hClose, hFileSize, openFile )
+import System.Posix.Types( UserID(..) )
+import System.Posix.Files( getFileStatus, fileOwner )
 import Control.Exception( bracket, handle, SomeException )
 import Control.Monad( filterM, liftM, forM )
 \end{code}
@@ -17,6 +20,7 @@ data Info = Info {
     , infoPerms :: Maybe Permissions
     , infoSize :: Maybe Integer
     , infoModTime :: Maybe ClockTime
+    , infoOwner :: Maybe UserID
     } deriving( Eq, Ord, Show )
 \end{code}
 
@@ -26,7 +30,14 @@ getInfo path = do
   perms <- maybeIO $ getPermissions path
   size <- maybeIO $ bracket (openFile path ReadMode) hClose hFileSize
   modified <- maybeIO $ getModificationTime path
-  return $ Info path perms size modified
+  user <- maybeIO $ getUserID path
+  return $ Info path perms size modified user
+\end{code}
+
+\begin{code}
+getUserID path = do
+  fstatus <- getFileStatus path
+  return $ fileOwner fstatus
 \end{code}
 
 \begin{code}
