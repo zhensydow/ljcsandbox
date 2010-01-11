@@ -23,3 +23,7 @@ rename old new = do
 \begin{code}
 cc2cpp = namesMatching "*.cc" >>= mapM (renameWith $ flip replaceExtension ".cpp")
 \end{code}
+
+\begin{code}
+main = cc2cpp
+\end{code}
