@@ -12,6 +12,7 @@ import XMonad.Util.Run( spawnPipe )
 import XMonad.Hooks.ManageDocks( manageDocks, avoidStruts, ToggleStruts(..) )
 import XMonad.Hooks.ManageHelpers( composeOne, (-?>) )
 import XMonad.Hooks.DynamicLog( dynamicLogWithPP, PP(..), xmobarColor, xmobarPP, wrap, shorten )
+import XMonad.Hooks.SetWMName( setWMName )
 import XMonad.Actions.CycleWS( prevWS, nextWS, shiftToPrev, shiftToNext, toggleWS )
 import XMonad.Actions.Submap( submap )
 import XMonad.Layout.Gaps( GapMessage(..), gaps, Direction2D(..) )
@@ -24,7 +25,6 @@ import XMonad.Prompt.Ssh( sshPrompt )
 import XMonad.Actions.Search as Search( promptSearch, selectSearch
                                       , imdb, google, wikipedia, maps, mathworld, youtube )
 import XMonad.Layout.LayoutCombinators((*/*))
-
 import System.IO( hPutStrLn )
 import qualified Data.Map as M( union, fromList )
 
@@ -35,6 +35,8 @@ main = do
        , manageHook = (composeOne [ resource =? "stalonetray" -?> doIgnore ]) <+> manageDocks <+> manageHook defaultConfig
        , layoutHook = showWName' mySWNConfig myLayout
        , workspaces = myWorkspaces
+
+       , startupHook = setWMName "LG3D"
 
        -- xmobar configuration
        , logHook = dynamicLogWithPP $ xmobarPP 
