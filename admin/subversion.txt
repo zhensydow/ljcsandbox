@@ -1,0 +1,109 @@
+Instalar un servidor de Subversion en Ubuntu
+Publicado Mayo 29, 2007	 Linux , Programacion , Ubuntu 17 Comentarios	
+Ayer escribi un articulo de como Instalar CVS en Ubuntu. En los comentarios Kikorb me indica que en su web tiene un articulo similar pero referido a Subversion. Asi que me decido a colgarlo aqui. La verdad, prefiero Subversion aunque por motivos laborales el sistema que tengo que utilizar es CVS.
+
+Articulo Original | La web de Kikorb
+
+Instalacion y configuracion de Subversion
+
+Me embarco en la aventura de instalar subversion al servidor… ¿Qué es subversion?
+
+Subversion es un servidor de control de versiones. Si estas trabajando en un proyecto grande, es lógico que con el paso del tiempo vayas haciendo cambios mas o menos importantes. Puede que en un momento dado quieras volver a una versión previa de un archivo, o de todo el proyecto, que desees ver quién hizo un cambio y porqué… para eso está subversion.
+
+Se supone que tenemos configurado un servidor bajo Apache en una distribución Debian.
+
+Primer paso: Instalación de las herramientas necesarias
+
+Instalamos los paquetes que nos hacen falta para crear repositorios:
+
+sudo aptitude install subversion subversion-tools
+
+Necesitamos dos módulos de apache instalados en nuestro servidor, si haremos uso de svn a través de internet… (obvio, al menos para mí)
+
+Los modulos son dav y dav_svn. Para comprobar que los tenemos:
+
+a2enmod dav
+a2enmod dav_svn
+
+Si no estaban instalados, los instalamos:
+
+sudo aptitude install libapache2-svn
+
+Segundo paso: Creación de grupos y usuarios permitidos
+
+Creamos un grupo subversion para manejar fácilmente los permisos
+
+groupadd subversion
+
+Añadimos a dicho grupo los usuarios que queremos que usen de algún modo nuestro servidor
+
+usermod -a -Gsubversion user1
+usermod -a -Gsubversion user2
+usermod -a -Gsubversion user3
+
+Ahora pasamos a crear los ficheros de acceso, que guardan los nombres y contraseñas de esos usuarios que harán uso del repositorio:
+
+htpasswd2 -c /etc/apache2/dav_svn.passwd user1
+htpasswd2 /etc/apache2/dav_svn.passwd user2
+htpasswd2 /etc/apache2/dav_svn.passwd user3
+
+El primero lleva -c por la simple razón de que crea el fichero. Los demás se añaden a él.
+Cada vez que introduzcamos un usuario, se nos pedirá su nueva contraseña.
+
+Tercer paso: Creación de un repositorio
+
+Ahora creamos la carpeta donde ubicaremos el repositorio:
+
+sudo mkdir /home/SVN
+sudo svnadmin create /home/SVN
+
+Y le damos los correspondientes permisos
+
+chown -R www-data:subversion /home/svn/
+chmod -R 770 /home/svn/
+
+Cuarto paso: Configurando Apache para los repositorios
+
+Pasamos a configurar el fichero que gestiona el módulo de apache para el svn:
+
+sudo gedit /etc/apache2/mods-available/dav_svn.conf
+
+Dentro ponemos esta configuración:
+
+##
+# SVN
+#
+<Location /svn>
+DAV svn
+SVNPath /home/svn
+AuthType Basic
+AuthName "Repositorio Subversion del proyecto"
+AuthUserFile /etc/apache2/dav_svn.passwd
+<LimitExcept GET PROPFIND OPTIONS REPORT>
+Require valid-user
+</LimitExcept>
+</Location>
+
+Si queremos quitar el modo lectura a cualquiera, porque nuestro proyecto sea confidencial o no queramos que sea visto desde fuera, basta reemplazar la sección:
+
+<LimitExcept GET PROPFIND OPTIONS REPORT>
+Require valid-user
+</LimitExcept>
+
+por
+
+Require valid-user
+
+Reiniciamos el servicio de apache para que nos rearranque con los cambios introducidos.
+
+sudo /etc/init.d/apache2 restart
+
+Notas finales
+
+Si queremos añadir usuarios a nuestros repositorios:
+
+htpasswd2 /etc/apache2/dav_svn.passwd otro_usuario
+
+Si queremos crear nuevos repositorios repetiremos todo desde el tercer paso, creando fichero de contraseñas con otro nombre (seguridad), añadiendo al final del fichero /etc/apache2/mods-available/dav_svn.conf la configuracion del nuevo servidor (seguramente cambia el path al fichero de contraseñas y el path al propio repositorio.
+
+Eso es todo. Disfrutad.
