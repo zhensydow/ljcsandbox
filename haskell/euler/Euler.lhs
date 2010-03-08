@@ -5,7 +5,8 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{code}
-module Euler( digits, toint, primeDecomp, totient, fact, sigma1 ) where
+module Euler( digits, digits', toint, primeDecomp, totient, fact, sigma1 ) 
+    where
 \end{code}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -18,6 +19,10 @@ import Data.Ratio( (%) )
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{code}
 digits = map (fromIntegral . digitToInt) . show
+\end{code}
+
+\begin{code}
+digits' = map (fromIntegral . digitToInt)
 \end{code}
 
 \begin{code}
