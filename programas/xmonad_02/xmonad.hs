@@ -120,7 +120,7 @@ myKeys conf@(XConfig {modMask = modm}) =
          ]
 
 internetMap = M.fromList $
-              [ ((0, xK_f), spawn "exec chromium-browser --enable-plugins" )
+              [ ((0, xK_f), spawn "exec chromium-browser --enable-plugins --enable-file-cookies" )
               , ((0, xK_p), spawn "exec ssh -X ozzy.ifca.es pidgin" )
               , ((0, xK_s), sshPrompt defaultXPConfig ) ]
 
