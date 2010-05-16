@@ -140,3 +140,8 @@ Configuracion de .emacs
 ;; necesita xpp instalado
 ;; se imprime con    M+X lpr-buffer     ||     M+X lpr-region
 (setq lpr-command "xpp")
+
+;; =============================================================================
+;; Set mode for file
+;; =============================================================================
+(setq auto-mode-alist (cons '("uc$" . c++-mode) auto-mode-alist))
