@@ -19,3 +19,6 @@ CTRL-a k	mata la ventana actual. Cuando se matan todas, termina screen
 CTRL-a X	mata la region actual
 
 CTRL-a c	crea una nueva ventana con shell
+
+CTRL-a h        (hardcopy) Escribe la ventana actual al fichero "hardcopy.n"
+CTRL-a H        (log) Inicio/Fin del grabado en el fichero "screenlog.n"
