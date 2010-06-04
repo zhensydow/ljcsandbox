@@ -74,4 +74,5 @@ escape c
 \begin{code}
 charClass :: String -> Logger String
 charClass (']':cs) = (']':) `liftM` globToRegex' cs
+charClass (c:cs) = (c:) `liftM` charClass cs
 \end{code}
