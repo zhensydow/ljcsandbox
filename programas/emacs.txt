@@ -31,11 +31,14 @@ M+w	     copiar desde el inicio del bloque hasta posicion del cursor
 C+w	     cortar deste el inicio del bloque hasta posicion del cursor
 C+y	     pegar
 C+_	     undo
+C+x h        selecciona todo el buffer
 
 C+x r k	     cortar el rectangulo seleccionado
 C+x r d	     borrar el rectangulo seleccionad
 C+x r y	     copiar el rectangulo seleccionado
 C+x r c	     limpiar el rectangulo seleccionado
+
+C+x l        da el numero de lineas del fichero
 
 C+h b 	     muestra los accesos de teclados actuales
 
@@ -52,6 +55,11 @@ U		(*svn-status*) update
 l		(*svn-status*) log
 =		(*svn-status*) diff
 $		(*svn-status*) expande/oculta directorio
+
+
+Cambiar el encoding / lineas final de carro
+M+x set-buffer-file-coding-system   escribir mac, dos o unix
+(Ctrl+x Enter f)
 
 
 Configuracion de .emacs
