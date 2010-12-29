@@ -47,7 +47,7 @@ charToSuit _ = error "Unknown suit"
 \begin{code}
 data Value = V2 | V3 | V4 | V5 | V6 | V7 | V8 | V9 | V10 
            | Jack | Queen | King | Ace
-             deriving( Eq )
+             deriving( Enum, Eq, Ord )
 
 instance Show Value where
     show V2 = "2"
@@ -96,6 +96,9 @@ stringToCard _ = error "Unknown card"
 
 \begin{code}
 type Hand = [Card]
+
+stringToHand :: String -> Hand
+stringToHand = map stringToCard . splitOn " "
 \end{code}
 
 \begin{code}
@@ -109,6 +112,7 @@ data HandRank = HighCard Value [Card]
               | Four Value [Card]
               | StraightFlush Value
               | RoyalFlush
+              deriving( Show )
 \end{code}
 
 \begin{code}
@@ -117,14 +121,52 @@ sameSuit = (==1) . length . group . sort . map cardSuit
 \end{code}
 
 \begin{code}
---calculateRank :: Hand -> HandRank
---calculateRank xs
---    | sameSuit xs
+lowestValue :: Hand -> Value
+lowestValue = minimum . map cardValue
+\end{code}
+
+\begin{code}
+highestValue :: Hand -> Value
+highestValue = maximum . map cardValue
+\end{code}
+
+\begin{code}
+consecutiveValues :: Hand -> Bool
+consecutiveValues xs = length [minValue..maxValue] == length xs
+    where
+      minValue = lowestValue xs
+      maxValue = highestValue xs
+\end{code}
+
+\begin{code}
+calculateRank :: Hand -> HandRank
+calculateRank xs
+    | consecutiveValues xs = calculateConsecutiveRank xs
+    | otherwise = calculateGroupRank xs
+\end{code}
+
+calculateConsecutive checks if hand is Straight, StraightFlush or RoyalFlush
+
+\begin{code}
+calculateConsecutiveRank :: Hand -> HandRank
+calculateConsecutiveRank xs
+    | sameSuit xs = if (maxCard == Ace) then RoyalFlush else StraightFlush maxCard
+    | otherwise = Straight maxCard
+    where 
+      maxCard = highestValue xs
+\end{code}
+
+\begin{code}
+calculateGroupRank :: Hand -> HandRank
+calculateGroupRank xs
+    | length (head groups) == 4 = FourFalue (cardValue head
+    | otherwise = HighCard (cardValue (head xs)) xs
 \end{code}
 
 \begin{code}
 main = do
   contents <- readFile "problem054.txt"
-  print $ map toHands $ lines contents
-  where toHands = (take 5 &&& drop 5) . map stringToCard . splitOn " "
+  let plays = map toHands $ lines contents
+  print $ map (\(a,b)-> (calculateRank a, calculateRank b)) plays
+  where toHands = (take 5 &&& drop 5) . stringToHand
 \end{code}
