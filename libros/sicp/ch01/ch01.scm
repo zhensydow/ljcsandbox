@@ -227,3 +227,67 @@
         x
         (- 0 (* x x))))
   (cont-frac d n k))
+
+;Exercise 1.40
+(define dx 0.00001)
+
+(define (deriv g)
+  (lambda (x)
+    (/ (- (g (+ x dx)) (g x)) dx)))
+
+(define (newton-transform g)
+  (lambda (x)
+    (- x (/ (g x) ((deriv g) x)))))
+
+(define (newtons-method g guess)
+  (fixed-point (newton-transform g) guess))
+
+(define (cubic a b c)
+  (lambda (x)
+    (+ (cube x) (* a x x) (* b x) c)))
+
+;Exercise 1.41
+(define (double f)
+  (lambda (x)
+    (f (f x))))
+
+;Exercise 1.42
+(define (compose f g)
+  (lambda (x)
+    (f (g x))))
+
+;Exercise 1.43
+(define (repeated f n)
+  (if (= n 1)
+      f
+      (compose f (repeated f (- n 1)))))
+
+;Exercise 1.44
+(define (smooth f)
+  (lambda (x)
+    (/ (+ (f x) (f (- x dx)) (f (+ x dx))) 3)))
+
+(define (n-smooth f n)
+  ((repeated smooth n) f))
+
+;Exercise 1.46
+(define (iterative-improve good-enough? improve)
+  (define (iter-fun guess)
+    (if (good-enough? guess)
+        guess
+        (iter-fun (improve guess))))
+  iter-fun)
+
+(define (msqrt x)
+  (define (good? guess)
+    (< (abs (- (square guess) x)) 0.0001))
+  (define (improve guess)
+    (/ (+ guess (/ x guess)) 2.0))
+  ((iterative-improve good? improve) 1.0))
+
+(define (mfixed-point f first-guess)
+  (define (good? guess)
+    ( < (abs (- guess (f guess))) 0.0001))
+  (define (improve guess)
+    (f guess))
+  ((iterative-improve good? improve) first-guess))
