@@ -7,7 +7,7 @@
 \begin{code}
 module Euler( 
              digits, digits', toint, primeDecomp, totient, fact, sigma1, 
-             isPrime ) 
+             isPrime, primes ) 
     where
 \end{code}
 
