@@ -26,7 +26,7 @@ digits' = map (fromIntegral . digitToInt)
 \end{code}
 
 \begin{code}
-toint = foldl (\a b-> a * 10 + (fromIntegral b)) 0
+toint = foldl (\a b-> a * 10 + fromIntegral b) 0
 \end{code}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -61,7 +61,7 @@ mulPrimeDecomp = product . map (cociente . fst)
 \end{code}
 
 \begin{code}
-totient n = round . fromRational $ (fromInteger n) * (mulPrimeDecomp $ primeDecomp n)
+totient n = round . fromRational $ fromInteger n * (mulPrimeDecomp $ primeDecomp n)
 \end{code}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

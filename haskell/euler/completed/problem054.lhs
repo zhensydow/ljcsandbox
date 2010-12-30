@@ -20,10 +20,11 @@ The file, problem054.txt, contains one-thousand random hands dealt to two player
 How many hands does Player 1 win?
 
 \begin{code}
-import Data.List( group, sort )
+import Data.List( group, groupBy, sort, sortBy, maximumBy, delete )
+import Data.Function( on )
+import Data.Ord( comparing )
 import Data.List.Split( splitOn )
-import System.IO( readFile )
-import Control.Arrow( (&&&) )
+import Control.Arrow( (&&&), (***) )
 \end{code}
 
 \begin{code}
@@ -104,15 +105,65 @@ stringToHand = map stringToCard . splitOn " "
 \begin{code}
 data HandRank = HighCard Value [Card]
               | OnePair Value [Card]
-              | TwoPairs Value Value [Card]
+              | TwoPairs Value Value Value
               | Three Value [Card]
               | Straight Value 
               | Flush [Card]
               | FullHouse Value Value
-              | Four Value [Card]
+              | Four Value Value
               | StraightFlush Value
               | RoyalFlush
-              deriving( Show )
+              deriving( Show, Eq )
+
+instance Ord HandRank where
+    RoyalFlush > RoyalFlush = error "comparing hands"
+    RoyalFlush > _ = True
+    _ > RoyalFlush = False
+
+    (StraightFlush v1) > (StraightFlush v2) = v1 > v2
+    (StraightFlush _) > _ = True
+    _ > (StraightFlush _) = False
+
+    (Four v1 c1) > (Four v2 c2) = (v1 > v2) || ((v1 == v2) && (c1 > c2))
+    (Four _ _) > _ = True
+    _ > (Four _ _) = False
+
+    (FullHouse v1 c1) > (FullHouse v2 c2) = (v1 > v2) || ((v1 == v2) && (c1 > c2))
+    (FullHouse _ _) > _ = True
+    _ > (FullHouse _ _) = False
+
+    (Flush h1) > (Flush h2) = h1 `greatHand` h2
+    (Flush _) > _ = True
+    _ > (Flush _) = False
+
+    (Straight v1) > (Straight v2) = v1 > v2
+    (Straight _) > _ = True
+    _ > (Straight _) = False
+
+    (Three v1 h1) > (Three v2 h2) = (v1 > v2) || ((v1 == v2) && (h1 `greatHand` h2))
+    (Three _ _) > _ = True
+    _ > (Three _ _) = False
+
+    (TwoPairs v1 u1 c1) > (TwoPairs v2 u2 c2) = (max v1 u1 > max v2 u2) 
+                                                || ((max v1 u1 == max v2 u2) && (min v1 u1 > min v2 u2))
+                                                || ((min v1 u1 == min v2 u2) && c1 > c2)
+    (TwoPairs _ _ _) > _ = True
+    _ > (TwoPairs _ _ _) = False
+
+    (OnePair v1 h1) > (OnePair v2 h2) = (v1 > v2) || ((v1 == v2) && (h1 `greatHand` h2))
+    (OnePair _ _) > _ = True
+    _ > (OnePair _ _) = False
+
+    (HighCard v1 h1) > (HighCard v2 h2) = (v1 > v2) || ((v1 == v2) && (h1 `greatHand` h2))
+
+greatHand :: Hand -> Hand -> Bool
+[] `greatHand` [] = error "comparing hands"
+xs `greatHand` ys = (xVal > yVal) || ((xVal == yVal) && (delete xCard xs `greatHand` delete yCard ys))
+    where
+      xVal = highestValue xs
+      yVal = highestValue ys
+      xCard = highestCard xs
+      yCard = highestCard ys
 \end{code}
 
 \begin{code}
@@ -131,42 +182,57 @@ highestValue = maximum . map cardValue
 \end{code}
 
 \begin{code}
+highestCard :: Hand -> Card
+highestCard = maximumBy (comparing cardValue)
+\end{code}
+
+\begin{code}
 consecutiveValues :: Hand -> Bool
-consecutiveValues xs = length [minValue..maxValue] == length xs
+consecutiveValues xs = [minValue..maxValue] == (sort . map cardValue) xs
     where
       minValue = lowestValue xs
       maxValue = highestValue xs
 \end{code}
 
 \begin{code}
+groupValues :: Hand -> [[Card]]
+groupValues = groupBy ((==) `on` cardValue) . sortBy (comparing cardValue)
+\end{code}
+
+\begin{code}
 calculateRank :: Hand -> HandRank
 calculateRank xs
-    | consecutiveValues xs = calculateConsecutiveRank xs
-    | otherwise = calculateGroupRank xs
+    | isConsecutive && hasSameSuit && (maxValue == Ace) = RoyalFlush
+    | isConsecutive && hasSameSuit = StraightFlush maxValue
+    | length bigGroup == 4 = Four bigGroupValue (groupNValue 1)
+    | length groups == 2 = FullHouse bigGroupValue (groupNValue 1)
+    | hasSameSuit = Flush xs
+    | isConsecutive = Straight maxValue
+    | length bigGroup == 3 = Three bigGroupValue (concat $ tail groups)
+    | length groups == 3 = TwoPairs bigGroupValue (groupNValue 1) (groupNValue 2)
+    | length groups == 4 = OnePair bigGroupValue (concat $ tail groups)
+    | otherwise = HighCard maxValue (delete maxCard xs)
+    where
+      isConsecutive = consecutiveValues xs
+      hasSameSuit = sameSuit xs
+      maxCard = highestCard xs
+      maxValue = highestValue xs
+      groups = reverse . sortBy (comparing length) $ groupValues xs
+      bigGroup = head groups
+      bigGroupValue = cardValue $ head bigGroup
+      groupNValue n = cardValue . head $ groups!!n
 \end{code}
 
-calculateConsecutive checks if hand is Straight, StraightFlush or RoyalFlush
-
 \begin{code}
-calculateConsecutiveRank :: Hand -> HandRank
-calculateConsecutiveRank xs
-    | sameSuit xs = if (maxCard == Ace) then RoyalFlush else StraightFlush maxCard
-    | otherwise = Straight maxCard
-    where 
-      maxCard = highestValue xs
+solution :: [(Hand,Hand)] -> Int
+solution = length . filter (uncurry (>)) . map (calculateRank *** calculateRank)
 \end{code}
 
 \begin{code}
-calculateGroupRank :: Hand -> HandRank
-calculateGroupRank xs
-    | length (head groups) == 4 = FourFalue (cardValue head
-    | otherwise = HighCard (cardValue (head xs)) xs
-\end{code}
-
-\begin{code}
+main :: IO ()
 main = do
   contents <- readFile "problem054.txt"
   let plays = map toHands $ lines contents
-  print $ map (\(a,b)-> (calculateRank a, calculateRank b)) plays
+  print $ solution plays
   where toHands = (take 5 &&& drop 5) . stringToHand
 \end{code}
