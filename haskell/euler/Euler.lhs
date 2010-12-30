@@ -5,7 +5,9 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{code}
-module Euler( digits, digits', toint, primeDecomp, totient, fact, sigma1 ) 
+module Euler( 
+             digits, digits', toint, primeDecomp, totient, fact, sigma1, 
+             isPrime ) 
     where
 \end{code}
 
@@ -54,6 +56,22 @@ incDic :: (Ord k, Num a) => DM.Map k a -> k -> DM.Map k a
 incDic d k = DM.insert k (maybe 1 (+1) (DM.lookup k d)) d
 \end{code}
 
+\begin{code}
+divides n p = n `mod` p == 0
+\end{code}
+
+\begin{code}
+primes :: [Int]
+primes = 2:3:primes'
+  where
+    1:p:candidates = [6*k+r | k <- [0..], r <- [1,5]]
+    primes' = p : filter isPrime' candidates
+    isPrime' n = all (not . divides n) $ takeWhile (\p -> p*p <= n) primes'
+\end{code}
+
+\begin{code}
+isPrime n = all (not . divides n) $ takeWhile (\p -> p*p <= n) primes
+\end{code}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{code}
 mulPrimeDecomp = product . map (cociente . fst)
