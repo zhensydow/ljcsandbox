@@ -1,31 +1,36 @@
 \begin{code}
 import Euler( sigma1 )
+import Data.IntSet( fromList, toList )
 \end{code}
 
-A048242		 Numbers that are not the sum of two abundant numbers (not necessarily distinct).
+Sloane A048242
 
 \begin{code}
-isAbundant n = sigma1 n > 2*n
-\end{code}
-
-\begin{code}
-abundants = filter isAbundant [1..20161]
-\end{code}
-
-\begin{code}
-sumAbundants n = length sums > 0
-    where sums = [ y | y <- [1..(n-1)]
-                 , y `elem` abundants, (n-y) `elem` abundants]
+limit :: Int
+limit = 20161
 \end{code}
 
 \begin{code}
-notSumAbundants = filter (not.sumAbundants) [2..20161]
+abundants :: [Int]
+abundants = [ a | a <- [12 .. limit], sigma1 (fromIntegral a) > (fromIntegral $ 2*a) ]
 \end{code}
 
 \begin{code}
-solution = sum notSumAbundants
+uniques :: [Int] -> [Int]
+uniques = toList . fromList
 \end{code}
 
 \begin{code}
+sumAbundants :: Int
+sumAbundants = sum . uniques $ [ x + y | x <- abundants, y <- abundants, (x+y) <= limit]
+\end{code}
+
+\begin{code}
+solution :: Int
+solution = sum [1..limit] - sumAbundants
+\end{code}
+
+\begin{code}
+main :: IO ()
 main = print solution
 \end{code}
