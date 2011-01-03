@@ -31,6 +31,7 @@ test02 = do
 \begin{code}
 calculateCosts :: Array (Int,Int) Integer -> Array (Int, Int) Integer
 calculateCosts edges = runSTArray $ do
+
                          let bs@(_,(sx,sy)) = bounds edges
                          arr <- newArray_ bs :: ST s (STArray s (Int,Int) Integer)
                          writeArray arr (0,0) $ edges ! (0,0)
