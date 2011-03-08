@@ -104,8 +104,13 @@ squareElems sdk = extractUniques sdk . squareIdxs
 \end{code}
 
 \begin{code}
+coincidentPairs :: [[Int]] -> [Int]
+coincidentPairs = nub . concatMap snd . filter ((==2).fst) . map (length &&& head) . group . sort
+\end{code}
+
+\begin{code}
 rowPairElems :: SudokuGrid -> SudokuIdx -> [Int]
-rowPairElems sdk = nub . concatMap snd . filter ((==2).fst) . map (length &&& head) . group . sort . extractPairs sdk . rowIdxs
+rowPairElems sdk = coincidentPairs . extractPairs sdk . rowIdxs
 \end{code}
 
 \begin{code}
