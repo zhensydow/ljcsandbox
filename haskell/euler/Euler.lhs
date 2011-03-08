@@ -8,7 +8,8 @@
 module Euler
     ( digits, digits', toint, fact, primeDecomp, firstFactor, 
       totient, sigma1, 
-      isPrime, primes, primesPlus, primesPlusFrom ) 
+      isPrime, primes, primesPlus, primesPlusFrom,
+      permutations, isPermutation ) 
     where
 \end{code}
 
@@ -17,6 +18,7 @@ module Euler
 import Data.Char( digitToInt )
 import qualified Data.Map as DM( toList, empty, insert, lookup, Map )
 import Data.Ratio( (%) )
+import Data.List( (\\) )
 \end{code}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -109,3 +111,12 @@ sigma1 n = product [((p^(a+1)) - 1) `div` (p - 1) | (p,a) <- primeDecomp n]
 \end{code}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{code}
+permutations :: Eq a => [a] -> [[a]]
+permutations xs = [x:ps | x <- xs, ps <- permutations (xs\\[x])]
+\end{code}
+
+\begin{code}
+isPermutation :: Eq a => [a] -> [a] -> Bool
+isPermutation xs ys = null $ xs \\ ys
+\end{code}
