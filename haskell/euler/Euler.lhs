@@ -9,7 +9,7 @@ module Euler
     ( digits, digits', toint, fact, primeDecomp, firstFactor, 
       totient, sigma1, 
       isPrime, primes, primesPlus, primesPlusFrom,
-      permutations, isPermutation ) 
+      permutations, isPermutation, combinations ) 
     where
 \end{code}
 
@@ -119,4 +119,10 @@ permutations xs = [x:ps | x <- xs, ps <- permutations (xs\\[x])]
 \begin{code}
 isPermutation :: Eq a => [a] -> [a] -> Bool
 isPermutation xs ys = null $ xs \\ ys
+\end{code}
+
+\begin{code}
+combinations 0 _ = [[]]
+combinations _ [] = []
+combinations k (x:xs) = map (x:) (combinations (k-1) xs) ++ combinations k xs
 \end{code}

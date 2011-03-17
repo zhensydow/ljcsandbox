@@ -1,9 +1,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{code}
-import Data.Array( Array(..), array, listArray, assocs, elems, (!) )
-import Data.List( nub, (\\), isPrefixOf, sort, group )
-import Euler( digits' )
-import Control.Arrow( (&&&) )
+import Data.Array( Array, array, listArray, assocs, elems, (!), (//) )
+import Data.List( nub, (\\), isPrefixOf )
+import Euler( digits', combinations, toint )
 \end{code}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -35,24 +34,22 @@ stringToSudoku = mkSudokuGrid . digits'
 
 \begin{code}
 mkSudokuGrid :: [Int] -> SudokuGrid
-mkSudokuGrid xs = listArray ((0,0),(8,8)) $ map convertToElement xs
+mkSudokuGrid = listArray ((0,0),(8,8)) . map convertToElement
 \end{code}
 
 \begin{code}
-ex01 = mkSudokuGrid [
- 0, 0, 3, 0, 2, 0, 6, 0, 0,
- 9, 0, 0, 3, 0, 5, 0, 0, 1,
- 0, 0, 1, 8, 0, 6, 4, 0, 0,
- 0, 0, 8, 1, 0, 2, 9, 0, 0,
- 7, 0, 0, 0, 0, 0, 0, 0, 8,
- 0, 0, 6, 7, 0, 8, 2, 0, 0,
- 0, 0, 2, 6, 0, 9, 5, 0, 0,
- 8, 0, 0, 2, 0, 3, 0, 0, 9,
- 0, 0, 5, 0, 1, 0, 3, 0, 0 ]
+noAssigned :: SudokuGrid -> [(SudokuIdx,[Int])]
+noAssigned = filter ((>1).length.snd) . assocs
 \end{code}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{code}
+ex01, ex02, ex03, ex04, ex05 :: SudokuGrid
+ex01 = stringToSudoku "003020600900305001001806400008102900700000008006708200002609500800203009005010300"
 ex02 = stringToSudoku "200080300060070084030500209000105408000000000402706000301007040720040060004010003"
+ex03 = iterateRemove ex02
+ex04 = stringToSudoku "000000907000420180000705026100904000050000040000507009920108000034059000507000000"
+ex05 = stringToSudoku "100920000524010000000000070050008102000000000402700090060000000000030945000071006"
 \end{code}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -62,8 +59,8 @@ extractUniques sdk = concat . filter ((==1).length) . map (sdk!)
 \end{code}
 
 \begin{code}
-extractPairs :: SudokuGrid -> [SudokuIdx] -> [[Int]]
-extractPairs sdk = filter ((==2).length) . map (sdk!)
+extractNplets :: Int -> SudokuGrid -> [SudokuIdx] -> [[Int]]
+extractNplets n sdk = filter ((>1).length) . filter ((<=n).length) . map (sdk!)
 \end{code}
 
 \begin{code}
@@ -104,42 +101,82 @@ squareElems sdk = extractUniques sdk . squareIdxs
 \end{code}
 
 \begin{code}
-coincidentPairs :: [[Int]] -> [Int]
-coincidentPairs = nub . concatMap snd . filter ((==2).fst) . map (length &&& head) . group . sort
+coincidentNplets :: Int -> [[Int]] -> [Int]
+coincidentNplets n = nub . concat . filter ((==n).length). map (nub.concat) . combinations n
 \end{code}
 
 \begin{code}
-rowPairElems :: SudokuGrid -> SudokuIdx -> [Int]
-rowPairElems sdk = coincidentPairs . extractPairs sdk . rowIdxs
+rowNpletElems :: Int -> SudokuGrid -> SudokuIdx -> [Int]
+rowNpletElems n sdk = coincidentNplets n . extractNplets n sdk . rowIdxs
+\end{code}
+
+\begin{code}
+colNpletElems :: Int -> SudokuGrid -> SudokuIdx -> [Int]
+colNpletElems n sdk = coincidentNplets n . extractNplets n sdk . colIdxs
+\end{code}
+
+\begin{code}
+squareNpletElems :: Int -> SudokuGrid -> SudokuIdx -> [Int]
+squareNpletElems n sdk = coincidentNplets n . extractNplets n sdk . squareIdxs
 \end{code}
 
 \begin{code}
 forbidenElems :: SudokuGrid -> SudokuIdx -> [Int]
 forbidenElems sdk i = nub $ extractUniques sdk indices
     where
-      indices = (rowIdxs i) ++ (colIdxs i) ++ (squareIdxs i)
+      indices = rowIdxs i ++ colIdxs i ++ squareIdxs i
+\end{code}
+
+\begin{code}
+forbidenNpletElems :: Int -> SudokuGrid -> SudokuIdx -> [Int]
+forbidenNpletElems n sdk i = nub $ rowts ++ colts ++ squarets
+    where
+      rowts = rowNpletElems n sdk i
+      colts = colNpletElems n sdk i
+      squarets = squareNpletElems n sdk i
 \end{code}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{code}
-removeFunction :: SudokuGrid -> (SudokuIdx,[Int]) -> (SudokuIdx,[Int])
-removeFunction sdk = \(i,e) -> (i, e \\ forbidenElems sdk i)
+removeFunction :: (SudokuIdx -> [Int]) -> (SudokuIdx,[Int]) -> (SudokuIdx,[Int])
+removeFunction f (i,e) = (i, e \\ f i)
 \end{code}
 
 \begin{code}
 removeForbidden :: SudokuGrid -> SudokuGrid
 removeForbidden sdk = array ((0,0),(8,8)) newassocs
     where
-      newassocs = map (removeFunction sdk) $ assocs sdk
+      newassocs = map (removeFunction $ forbidenElems sdk) $ assocs sdk
+\end{code}
+
+\begin{code}
+removeForbiddenNplets :: Int -> SudokuGrid -> SudokuGrid
+removeForbiddenNplets n sdk = array ((0,0),(8,8)) newassocs
+    where
+      newassocs = map (removeFunction $ forbidenNpletElems n sdk) $ assocs sdk
 \end{code}
 
 \begin{code}
 iterateRemove :: SudokuGrid -> SudokuGrid
 iterateRemove sdk
-    | sdk /= newsdk = iterateRemove newsdk
+    | sdk /= newsdk01 = iterateRemove newsdk01
+    | sdk /= newsdk02 = iterateRemove newsdk02
+    | sdk /= newsdk03 = iterateRemove newsdk03
+    | sdk /= newsdk04 = iterateRemove newsdk04
+    | sdk /= newsdk05 = iterateRemove newsdk05
+    | sdk /= newsdk06 = iterateRemove newsdk06
+    | sdk /= newsdk07 = iterateRemove newsdk07
+    | sdk /= newsdk08 = iterateRemove newsdk08
     | otherwise = sdk
     where 
-      newsdk = removeForbidden sdk
+      newsdk01 = removeForbidden sdk
+      newsdk02 = removeForbiddenNplets 2 newsdk01
+      newsdk03 = removeForbiddenNplets 3 newsdk02
+      newsdk04 = removeForbiddenNplets 4 newsdk03
+      newsdk05 = removeForbiddenNplets 5 newsdk04
+      newsdk06 = removeForbiddenNplets 6 newsdk05
+      newsdk07 = removeForbiddenNplets 7 newsdk06
+      newsdk08 = removeForbiddenNplets 8 newsdk07
 \end{code}
 
 \begin{code}
@@ -147,8 +184,37 @@ solved :: SudokuGrid -> Bool
 solved = all ((==1).length) . elems
 \end{code}
 
+\begin{code}
+invalid :: SudokuGrid -> Bool
+invalid = any ((==0).length) . elems
+\end{code}
+
+\begin{code}
+backtrackingSolve :: SudokuGrid -> [SudokuGrid]
+backtrackingSolve sdk
+    | solved sdk = [sdk]
+    | invalid sdk = []
+    | otherwise = concatMap (backtrackingSolve . iterateRemove) . map apply $ changes
+    where
+      apply x = sdk // [x]
+      changes = [(a,[b]) | (a,r) <- noAssigned sdk, b <- r]
+\end{code}
+
+\begin{code}
+resolveSudoku :: SudokuGrid -> SudokuGrid
+resolveSudoku = head . backtrackingSolve . iterateRemove
+\end{code}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{code}
+topLeftCorner :: SudokuGrid -> Integer
+topLeftCorner sdk = toint . concatMap (sdk!) $ tlIdx
+    where
+      tlIdx = [(0,0),(0,1),(0,2)]
+\end{code}
+
+\begin{code}
+joinN :: Int -> [a] -> [[a]]
 joinN _ [] = []
 joinN n xs = take n xs : joinN n (drop n xs)
 \end{code}
@@ -162,16 +228,16 @@ readSudokus = fmap (map stringToSudoku . sudokuStrings) . readFile
 \end{code}
 
 \begin{code}
+solution :: IO Integer
 solution = do
   suds <- readSudokus "problem096.txt"
-  return $ map (solved . iterateRemove) suds
+  return . sum $ map (topLeftCorner . resolveSudoku) suds
 \end{code}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{code}
-main = do
-  sol <- solution
-  print sol
+main :: IO ()
+main = solution >>= print
 \end{code}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
