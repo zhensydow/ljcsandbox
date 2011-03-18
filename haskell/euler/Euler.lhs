@@ -7,7 +7,7 @@
 \begin{code}
 module Euler
     ( digits, digits', toint, fact, primeDecomp, firstFactor, 
-      totient, sigma1, 
+      totient, sigma0, sigma1, numDivisors,
       isPrime, primes, primesPlus, primesPlusFrom,
       permutations, isPermutation, combinations ) 
     where
@@ -105,6 +105,15 @@ fact n = product [1..n]
 \end{code}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+En general sigma_x(n) es definida como la suma de la x-esima potencia de los 
+divisores positivos de n
+
+sigma0 es el numero de los divisores de n === d(n)
+\begin{code}
+sigma0 n = product [(a + 1) | (_,a) <- primeDecomp n]
+numDivisors = sigma0
+\end{code}
+
 sigma1 es la suma de los divisores de n
 \begin{code}
 sigma1 n = product [((p^(a+1)) - 1) `div` (p - 1) | (p,a) <- primeDecomp n]

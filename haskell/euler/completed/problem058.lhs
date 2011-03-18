@@ -50,7 +50,7 @@ iterateSpiral side np nl limit
     | otherwise = iterateSpiral (side+2) (np + nnewprimes) (nl + 4) limit
     where
       nnewprimes = length newprimes
-      newprimes = filter (isPrime) $ diagonalLayer (side+2)
+      newprimes = filter (isPrime.fromIntegral) $ diagonalLayer (side+2)
 \end{code}
 
 \begin{code}
