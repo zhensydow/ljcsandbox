@@ -7,7 +7,7 @@
 \begin{code}
 module Euler
     ( digits, digits', toint, fact, primeDecomp, firstFactor, 
-      totient, sigma0, sigma1, numDivisors,
+      totient, sigma0, sigma1, numDivisors, numDivisorsArray,
       isPrime, primes, primesPlus, primesPlusFrom,
       permutations, isPermutation, combinations ) 
     where
@@ -19,6 +19,10 @@ import Data.Char( digitToInt )
 import qualified Data.Map as DM( toList, empty, insert, lookup, Map )
 import Data.Ratio( (%) )
 import Data.List( (\\) )
+import Data.Array.ST( runSTUArray )
+import Data.Array.MArray( newArray, readArray, writeArray )
+import Data.Array.Unboxed( UArray(..) )
+import Control.Monad( forM_ )
 \end{code}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -119,6 +123,19 @@ sigma1 es la suma de los divisores de n
 sigma1 n = product [((p^(a+1)) - 1) `div` (p - 1) | (p,a) <- primeDecomp n]
 \end{code}
 
+\begin{code}
+incarray arr i = do
+  v <- readArray arr i
+  writeArray arr i (v+1)
+
+numDivisorsArray :: Int -> UArray Int Int
+numDivisorsArray n = runSTUArray $ do
+                       arr <- newArray (1,n) 1
+                       forM_ [2..n] $ \i -> do
+                                     forM_ [ i, i+i .. n] $ incarray arr
+                       return arr
+\end{code}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{code}
 permutations :: Eq a => [a] -> [[a]]
@@ -135,3 +152,5 @@ combinations 0 _ = [[]]
 combinations _ [] = []
 combinations k (x:xs) = map (x:) (combinations (k-1) xs) ++ combinations k xs
 \end{code}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
