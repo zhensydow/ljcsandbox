@@ -8,7 +8,7 @@
 module Euler
     ( digits, digits', toint, fact, primeDecomp, firstFactor, 
       totient, sigma0, sigma1, numDivisors, numDivisorsArray,
-      isPrime, primes, primesPlus, primesPlusFrom,
+      isPrime, isPrime', primes, primesPlus, primesPlusFrom,
       permutations, isPermutation, combinations ) 
     where
 \end{code}
@@ -82,6 +82,68 @@ primes = 2:3:primes'
 
 \begin{code}
 isPrime n = all (not . divides n) $ takeWhile (\p -> p*p <= n) primes
+\end{code}
+
+
+Miller-Rabin Primality Test
+http://www.haskell.org/haskellwiki/Testing_primality
+
+\begin{code}
+find2Decomp :: Integral a => a -> (a,a)
+find2Decomp n = f 0 n
+    where 
+      f k m
+          | r == 1 = (k,m)
+          | otherwise = f (k+1) q
+          where 
+            (q,r) = m `quotRem` 2
+\end{code}
+
+\begin{code}
+mulMod :: Integral a => a -> a -> a -> a
+mulMod a b c = (b*c) `mod` a
+squareMod :: Integral a => a -> a -> a
+squareMod a b = (b*b) `rem` a
+powMod :: Integral a => a -> a -> a -> a
+powMod m = pow' (mulMod m) (squareMod m)
+\end{code}
+
+\begin{code}
+pow' :: (Num a, Integral b) => (a->a->a) -> (a->a) -> a -> b -> a
+pow' _ _ _ 0 = 1
+pow' mul sq a b = f a b 1
+    where
+      f x n y
+          | n == 1 = x `mul` y
+          | r == 0 = f x' q y
+          | otherwise = f x' q (x `mul` y)
+          where
+            (q,r) = quotRem n 2
+            x' = sq x
+\end{code}
+
+\begin{code}
+millerRabinTest n a
+    | n < 2 = False
+    | even n = False
+    | b0 == 1 || b0 == n' = True
+    | otherwise = iter (tail b)
+    where
+      b0 = powMod n a m
+      (k,m) = find2Decomp n'
+      n' = n - 1
+      b = take (fromIntegral k) $ iterate (squareMod n) b0
+      iter [] = False
+      iter (x:xs) 
+          | x == 1 = False
+          | x == n' = True
+          | otherwise = iter xs
+\end{code}
+
+\begin{code}
+isPrime' 2 = True
+isPrime' 3 = True
+isPrime' n = millerRabinTest n 2
 \end{code}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
