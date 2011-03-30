@@ -18,7 +18,7 @@ module Euler
 import Data.Char( digitToInt )
 import qualified Data.Map as DM( toList, empty, insert, lookup, Map )
 import Data.Ratio( (%) )
-import Data.List( (\\) )
+import Data.List( (\\), foldl' )
 import Data.Array.ST( runSTUArray )
 import Data.Array.MArray( newArray, readArray, writeArray )
 import Data.Array.Unboxed( UArray(..) )
@@ -35,7 +35,7 @@ digits' = map (fromIntegral . digitToInt)
 \end{code}
 
 \begin{code}
-toint = foldl (\a b-> a * 10 + fromIntegral b) 0
+toint = foldl' (\a b-> a * 10 + fromIntegral b) 0
 \end{code}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

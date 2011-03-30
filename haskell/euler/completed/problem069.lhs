@@ -22,3 +22,7 @@ candidates = last $ takeWhile ((<1000000).product) $ scanl (\a b -> a ++ [b]) []
 \begin{code}
 solution = maximum . map product . inits $ candidates
 \end{code}
+
+\begin{code}
+main = print solution
+\end{code}
