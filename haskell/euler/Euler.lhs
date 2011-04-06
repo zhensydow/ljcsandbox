@@ -9,7 +9,8 @@ module Euler
     ( digits, digits', toint, fact, primeDecomp, firstFactor, 
       totient, sigma0, sigma1, numDivisors, numDivisorsArray,
       isPrime, isPrime', primes, primesPlus, primesPlusFrom,
-      permutations, isPermutation, combinations ) 
+      permutations, isPermutation, combinations,
+      isSquare, isIntegral ) 
     where
 \end{code}
 
@@ -23,6 +24,7 @@ import Data.Array.ST( runSTUArray )
 import Data.Array.MArray( newArray, readArray, writeArray )
 import Data.Array.Unboxed( UArray(..) )
 import Control.Monad( forM_ )
+import Control.Parallel( par, pseq )
 \end{code}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -36,6 +38,17 @@ digits' = map (fromIntegral . digitToInt)
 
 \begin{code}
 toint = foldl' (\a b-> a * 10 + fromIntegral b) 0
+\end{code}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{code}
+isSquare x = ix * ix == x
+    where
+      ix = truncate . sqrt . fromIntegral $ x
+\end{code}
+
+\begin{code}
+isIntegral x = (fromIntegral . truncate) x == x
 \end{code}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -212,7 +225,9 @@ isPermutation xs ys = null $ xs \\ ys
 \begin{code}
 combinations 0 _ = [[]]
 combinations _ [] = []
-combinations k (x:xs) = map (x:) (combinations (k-1) xs) ++ combinations k xs
+combinations k (x:xs) = let ck = combinations k xs 
+                            ck1 = combinations (k-1) xs
+                        in ck `par` ck1 `pseq` (map (x:) ck1 ++ ck)
 \end{code}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
