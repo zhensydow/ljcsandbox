@@ -22,6 +22,14 @@ buscaLen n = 1 + (length $ takeWhile (/=r0) $ tail ys)
 \end{code}
 
 \begin{code}
+buscaCycle n = takeWhile (/=r0) $ tail ys
+    where
+      xs = restos n
+      ys = drop (n-1) xs
+      r0 = head ys
+\end{code}
+
+\begin{code}
 lengths = map (id &&& buscaLen) [2..1000]
 solution = maximumBy (comparing snd) lengths
 \end{code}

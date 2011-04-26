@@ -6,10 +6,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{code}
 module Euler
-    ( digits, digits', toint, fact, primeDecomp, firstFactor, 
+    ( digits, digits', toint, fact, primeDecomp, firstFactor, divisors, 
       totient, sigma0, sigma1, numDivisors, numDivisorsArray,
       isPrime, isPrime', primes, primesPlus, primesPlusFrom,
-      permutations, isPermutation, combinations,
+      permutations, isPermutation, combinations, cc, ccvals,
       isSquare, isIntegral ) 
     where
 \end{code}
@@ -38,6 +38,10 @@ digits' = map (fromIntegral . digitToInt)
 
 \begin{code}
 toint = foldl' (\a b-> a * 10 + fromIntegral b) 0
+\end{code}
+
+\begin{code}
+divisors n = 1 : filter ((==0) . rem n) [2 .. n `div` 2]
 \end{code}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -228,6 +232,25 @@ combinations _ [] = []
 combinations k (x:xs) = let ck = combinations k xs 
                             ck1 = combinations (k-1) xs
                         in ck `par` ck1 `pseq` (map (x:) ck1 ++ ck)
+\end{code}
+
+FROM SICP
+
+\begin{code}
+cc 0 _ = []
+cc _ [] = []
+cc amount (x:xs)
+    | amount < 0 = []
+    | otherwise = (cc amount xs) ++ (map (x:) (cc (amount - x) (x:xs)))
+\end{code}
+
+\begin{code}
+ccvals 0 _ = []
+ccvals _ [] = []
+ccvals amount (x:xs)
+    | amount == x = [[x]]
+    | amount < 0 = []
+    | otherwise = (ccvals amount xs) ++ (map (x:) (ccvals (amount - x) (x:xs)))
 \end{code}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
