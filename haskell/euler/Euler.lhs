@@ -10,7 +10,7 @@ module Euler
       totient, sigma0, sigma1, numDivisors, numDivisorsArray,
       isPrime, isPrime', primes, primesPlus, primesPlusFrom,
       permutations, isPermutation, combinations, cc, ccvals,
-      isSquare, isIntegral ) 
+      isSquare, isIntegral, msqrt, msqrt' ) 
     where
 \end{code}
 
@@ -22,9 +22,10 @@ import Data.Ratio( (%) )
 import Data.List( (\\), foldl' )
 import Data.Array.ST( runSTUArray )
 import Data.Array.MArray( newArray, readArray, writeArray )
-import Data.Array.Unboxed( UArray(..) )
+import Data.Array.Unboxed( UArray )
 import Control.Monad( forM_ )
 import Control.Parallel( par, pseq )
+import Control.Arrow( second )
 \end{code}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -227,6 +228,7 @@ isPermutation xs ys = null $ xs \\ ys
 \end{code}
 
 \begin{code}
+combinations :: Int -> [a] -> [[a]]
 combinations 0 _ = [[]]
 combinations _ [] = []
 combinations k (x:xs) = let ck = combinations k xs 
@@ -237,6 +239,7 @@ combinations k (x:xs) = let ck = combinations k xs
 FROM SICP
 
 \begin{code}
+cc :: Integral t => t -> [t] -> [[t]]
 cc 0 _ = []
 cc _ [] = []
 cc amount (x:xs)
@@ -245,12 +248,57 @@ cc amount (x:xs)
 \end{code}
 
 \begin{code}
+ccvals :: Integral t => t -> [t] -> [[t]]
 ccvals 0 _ = []
 ccvals _ [] = []
 ccvals amount (x:xs)
     | amount == x = [[x]]
     | amount < 0 = []
     | otherwise = (ccvals amount xs) ++ (map (x:) (ccvals (amount - x) (x:xs)))
+\end{code}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{code}
+toinfinite :: [Int] -> [Int]
+toinfinite dgts = pre ++ dgts ++ repeat 0
+    where
+      pre = if odd (length dgts) then [0] else []
+\end{code}
+
+\begin{code}
+numpairs :: [Int] -> Int
+numpairs dgts = ((length dgts) `div` 2) + 1
+\end{code}
+
+\begin{code}
+calcx :: Integer -> Integer -> Integer
+calcx c p = last . takeWhile check $ [0 .. ] 
+    where
+      check x = c >= ((20*p + x) * x)
+\end{code}
+
+\begin{code}
+ddsqrt :: [Int] -> Integer -> Integer -> [Int]
+ddsqrt xs r p = (fromInteger x) : ddsqrt rest nr (p*10 + x)
+    where
+      (next,rest) = splitAt 2 xs
+      c =  r * 100 + (toint next)
+      x = calcx c p
+      y = (20*p + x) * x
+      nr = c - y
+\end{code}
+
+\begin{code}
+msqrt :: Integer -> [Int]
+msqrt n = ddsqrt (toinfinite $ digits n) 0 0
+\end{code}
+
+\begin{code}
+msqrt' :: Integer -> Int -> ([Int],[Int])
+msqrt' n p = (second $ take p) . splitAt nn $ ddsqrt (toinfinite dgts) 0 0
+    where
+      dgts = digits n
+      nn = numpairs dgts
 \end{code}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
