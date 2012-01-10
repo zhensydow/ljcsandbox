@@ -21,6 +21,24 @@ data Triangle = TR
 \end{code}
 
 \begin{code}
+crossProduct :: Triangle -> (Int, Int, Int)
+crossProduct (TR xx0 yy0 xx1 yy1 xx2 yy2) = (a2*b2, 0, a1*b2 - a2*b1)
+  where
+    a1 = xx1 - xx0
+    a2 = yy1 - yy0
+    b1 = xx2 - xx0
+    b2 = yy2 - yy0
+    
+norm (a,b,c) = sqrt (fa*fa + fb*fb + fc*fc)
+  where
+    fa = fromIntegral a
+    fb = fromIntegral b
+    fc = fromIntegral c
+
+checkFace (_,_,c) = c >= 0
+\end{code}
+
+\begin{code}
 posibles l = [TR 0 0 x1 y1 x2 y2 | x1 <- [0..l], x2 <-[0..l], y1 <- [0..l], y2 <- [0..l], (x1,y1) /= (0,0), (x2,y2) /= (0,0), (x1,y1) /= (x2,y2)]
 \end{code}
 
@@ -39,4 +57,20 @@ checkRigth tr = (abs ((c*c) - (b*b) - (a*a))) < 0.000001
       ty12 = ty1 - ty2
       c' = sqrt. fromIntegral $ (tx12*tx12 + ty12*ty12)
       [a,b,c] = sort [a', b', c']
+\end{code}
+
+\begin{code}
+checkNode pp tr 
+  | pp == (x0 tr, y0 tr) = True
+  | pp == (x1 tr, y1 tr) = True
+  | pp == (x2 tr, y2 tr) = True
+  | otherwise = False
+\end{code}
+
+\begin{code}
+solution = length . filter checkRigth  . filter (checkFace. crossProduct) $ posibles 50
+\end{code}
+
+\begin{code}
+main = print solution
 \end{code}
