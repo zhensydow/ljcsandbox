@@ -6,8 +6,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{code}
 module Euler
-    ( digits, digits', toint, fact, primeDecomp, firstFactor, divisors, 
-      totient, sigma0, sigma1, numDivisors, numDivisorsArray,
+    ( digits, digits', toint, fact, primorial, primeDecomp, firstFactor, 
+      divisors, totient, sigma0, sigma1, numDivisors, numDivisorsArray,
       isPrime, isPrime', primes, primesPlus, primesPlusFrom,
       permutations, isPermutation, combinations, cc, ccvals,
       isSquare, isIntegral, msqrt, msqrt' ) 
@@ -186,6 +186,10 @@ firstFactor' n (p:ps)
 \begin{code}
 fact 0 = 1
 fact n = product [1..n]
+\end{code}
+
+\begin{code}
+primorial n = product $ take n primes
 \end{code}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
