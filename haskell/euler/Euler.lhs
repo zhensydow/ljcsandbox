@@ -223,6 +223,7 @@ numDivisorsArray n = runSTUArray $ do
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{code}
 permutations :: Eq a => [a] -> [[a]]
+permutations (x:[]) = [[x]]
 permutations xs = [x:ps | x <- xs, ps <- permutations (xs\\[x])]
 \end{code}
 
