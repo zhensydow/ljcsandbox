@@ -1,3 +1,6 @@
+import Control.Arrow( (&&&) )
+import Data.List( elemIndex, splitAt )
+import Data.Maybe( fromJust )
 import Data.Tuple( swap )
 
 {-| Binary trees
@@ -36,14 +39,16 @@ tree1' = Branch 'a' (Branch 'b' (leaf 'd') (leaf 'e'))
 Other examples of binary trees:
 -}
 -- A binary tree consisting of a root node only
-tree2 = Branch 'a' Empty Empty
+tree2 = leaf 'a'
  
 -- An empty binary tree
 tree3 = Empty
  
 -- A tree of integers
-tree4 = Branch 1 (Branch 2 Empty (Branch 4 Empty Empty))
-                 (Branch 2 Empty Empty)
+tree4 = Branch 1 (Branch 2 Empty (leaf 4)) (leaf 2)
+
+height Empty = 0
+height (Branch _ a b) = 1 + (height a `max` height b)
 
 {-| Problem 54A
 (*) Check whether a given term represents a binary tree
@@ -132,17 +137,15 @@ Branch 'x' (Branch 'x' (Branch 'x' Empty Empty)
 -}
 cbalTree :: Int -> [Tree Char]
 cbalTree 0 = [Empty]
-cbalTree 1 = [Branch 'x' Empty Empty]
-cbalTree 2 = [Branch 'x' (Branch 'x' Empty Empty) Empty,
-              Branch 'x' Empty (Branch 'x' Empty Empty)]
+cbalTree 1 = [leaf 'x']
 cbalTree n 
   | odd n = map (\(x,y) -> Branch 'x' x y) [(x,y) | x <- xs, y <- xs]
   | otherwise = map (\(x,y) -> Branch 'x' x y) zzs
     where 
       xs = cbalTree ((n-1) `div` 2)
       ys = [(x,y) | x <- xsEven, y <- ysEven]
-      xsEven = cbalTree ((n-1) `div` 2)
-      ysEven = cbalTree (((n-1) `div` 2)+1)
+      xsEven = cbalTree (((n-1) `div` 2)+1)
+      ysEven = cbalTree ((n-1) `div` 2)
       zzs = ys ++ map swap ys
       
 {-| Problem 56
@@ -227,7 +230,9 @@ symCbalTrees = filter symmetric . cbalTree
 {-| Problem 59
 (**) Construct height-balanced binary trees
 
-In a height-balanced binary tree, the following property holds for every node: The height of its left subtree and the height of its right subtree are almost equal, which means their difference is not greater than one.
+In a height-balanced binary tree, the following property holds for every node:
+The height of its left subtree and the height of its right subtree are almost
+equal, which means their difference is not greater than one.
 
 Example:
 
@@ -243,7 +248,17 @@ Example in Haskell:
  Branch 'x' (Branch 'x' Empty Empty) (Branch 'x' (Branch 'x' Empty Empty) (Branch 'x' Empty Empty)),
  Branch 'x' (Branch 'x' Empty (Branch 'x' Empty Empty)) (Branch 'x' Empty Empty)]
 -}
-
+hbalTree _ 0 = [Empty]
+hbalTree x 1 = [leaf x]
+hbalTree x 2 = [ Branch x (leaf x) Empty
+               , Branch x Empty (leaf x)
+               , Branch x (leaf x) (leaf x)]
+hbalTree x n = map (\(x,y) -> Branch 'x' x y) zzs
+  where
+    zzs = [(x,y) | x <- n1, y <- n2] ++ [(x,y) | x <- n2, y <- n1]
+    n1 = hbalTree x (n-1)
+    n2 = hbalTree x (n-2)
+    
 {-| Problem 60
 (**) Construct height-balanced binary trees with a given number of nodes
 
@@ -272,19 +287,32 @@ Example in Haskell:
  [Branch 'x' Empty Empty],
  [Branch 'x' Empty (Branch 'x' Empty Empty),Branch 'x' (Branch 'x' Empty Empty) Empty],
  [Branch 'x' (Branch 'x' Empty Empty) (Branch 'x' Empty Empty)]]
-Solutions
+-}
+maxN h = 2^h - 1
+minN 0 = 0
+minN 1 = 1
+minN h = 1 + minN (h-1) + minN (h-2)
 
-Binary trees
-As defined in problem 54A.
+maxHeight n = if n == m then h else (h-1)                             
+  where              
+    (h,m) = head . dropWhile ((<n).snd) $ map (id &&& minN) [0..]
+minHeight 0 = 0
+minHeight n = (floor $ logBase 2 n) + 1
+    
+hbalTreeNodes a 0 = [Empty]
+hbalTreeNodes a 1 = [leaf a]
+hbalTreeNodes a n = map (\(x,y) -> Branch a x y) $ filter check zzs
+  where
+    zzs = [(xs, ys) 
+          | (x,y) <- [(x,y) | x <-[0..(n-1)], let y = (n-1) - x]
+          , xs <- hbalTreeNodes a x, ys <- hbalTreeNodes a y]
+    check (x,y) = (abs $ (height x) - (height y)) <= 1
 
-An example tree:
-
-tree4 = Branch 1 (Branch 2 Empty (Branch 4 Empty Empty))
-                 (Branch 2 Empty Empty)
-2 Problem 61
+{-| Problem 61
 Count the leaves of a binary tree
 
-A leaf is a node with no successors. Write a predicate count_leaves/2 to count them.
+A leaf is a node with no successors. Write a predicate count_leaves/2 to count
+them.
 
 Example:
 
@@ -293,12 +321,17 @@ Example in Haskell:
 
 > countLeaves tree4
 2
-Solutions
+-}
+countLeaves Empty = 0
+countLeaves (Branch _ Empty Empty) = 1
+countLeaves (Branch _ x y) = countLeaves x + countLeaves y
 
-3 Problem 61A
+{-| Problem 61A
+
 Collect the leaves of a binary tree in a list
 
-A leaf is a node with no successors. Write a predicate leaves/2 to collect them in a list.
+A leaf is a node with no successors. Write a predicate leaves/2 to collect them
+in a list.
 
 Example:
 
@@ -307,12 +340,16 @@ Example in Haskell:
 
 > leaves tree4
 [4,2]
-Solutions
+-}
+leaves Empty = []
+leaves (Branch a Empty Empty) = [a]
+leaves (Branch _ x y) = leaves x ++ leaves y
 
-4 Problem 62
+{-| Problem 62
 Collect the internal nodes of a binary tree in a list
 
-An internal node of a binary tree has either one or two non-empty successors. Write a predicate internals/2 to collect them in a list.
+An internal node of a binary tree has either one or two non-empty
+successors. Write a predicate internals/2 to collect them in a list.
 
 Example:
 
@@ -321,13 +358,17 @@ Example in Haskell:
 
 Prelude>internals tree4
 Prelude>[1,2]
-Solutions
+-}
+internals Empty = []
+internals (Branch _ Empty Empty) = []
+internals (Branch a x y) = a : (internals x ++ internals y)
 
-
-5 Problem 62B
+{-| Problem 62B
 Collect the nodes at a given level in a list
 
-A node of a binary tree is at level N if the path from the root to the node has length N-1. The root node is at level 1. Write a predicate atlevel/3 to collect all nodes at a given level in a list.
+A node of a binary tree is at level N if the path from the root to the node has
+length N-1. The root node is at level 1. Write a predicate atlevel/3 to collect
+all nodes at a given level in a list.
 
 Example:
 
@@ -336,18 +377,29 @@ Example in Haskell:
 
 Prelude>atLevel tree4 2
 Prelude>[2,2]
-Solutions
-
-6 Problem 63
+-}
+atLevel _ 0 = []
+atLevel Empty _ = []
+atLevel (Branch a _ _) 1 = [a]
+atLevel (Branch _ x y) n = (atLevel x (n-1)) ++ (atLevel y (n-1))
+{-| Problem 63
 Construct a complete binary tree
 
 A complete binary tree with height H is defined as follows:
 
-The levels 1,2,3,...,H-1 contain the maximum number of nodes (i.e 2**(i-1) at the level i)
-In level H, which may contain less than the maximum possible number of nodes, all the nodes are "left-adjusted". This means that in a levelorder tree traversal all internal nodes come first, the leaves come second, and empty successors (the nil's which are not really nodes!) come last.
-Particularly, complete binary trees are used as data structures (or addressing schemes) for heaps.
+The levels 1,2,3,...,H-1 contain the maximum number of nodes (i.e 2**(i-1) at
+the level i) In level H, which may contain less than the maximum possible number
+of nodes, all the nodes are "left-adjusted". This means that in a levelorder
+tree traversal all internal nodes come first, the leaves come second, and empty
+successors (the nil's which are not really nodes!) come last.  Particularly,
+complete binary trees are used as data structures (or addressing schemes) for
+heaps.
 
-We can assign an address number to each node in a complete binary tree by enumerating the nodes in level-order, starting at the root with number 1. For every node X with address A the following property holds: The address of X's left and right successors are 2*A and 2*A+1, respectively, if they exist. This fact can be used to elegantly construct a complete binary tree structure.
+We can assign an address number to each node in a complete binary tree by
+enumerating the nodes in level-order, starting at the root with number 1. For
+every node X with address A the following property holds: The address of X's
+left and right successors are 2*A and 2*A+1, respectively, if they exist. This
+fact can be used to elegantly construct a complete binary tree structure.
 
 Write a predicate complete_binary_tree/2.
 
@@ -361,21 +413,34 @@ Branch 'x' (Branch 'x' (Branch 'x' Empty Empty) Empty) (Branch 'x' Empty Empty)
  
 Main> isCompleteBinaryTree $ Branch 'x' (Branch 'x' Empty Empty) (Branch 'x' Empty Empty)
 True
-Solutions
+-}
+completeBinaryTree 0 = Empty
+completeBinaryTree 1 = leaf 'x'
+completeBinaryTree n = Branch 'x' l r
+  where
+    l = completeBinaryTree ln
+    r = completeBinaryTree rn
+    rn = n - 1 - ln
+    ln = ((maxN (h-1)) - 1) `div` 2
+    h = minHeight . fromIntegral $ n
 
-7 Problem 64
-Given a binary tree as the usual Prolog term t(X,L,R) (or nil). As a preparation for drawing the tree, a layout algorithm is required to determine the position of each node in a rectangular grid. Several layout methods are conceivable, one of them is shown in the illustration below:
+{-| Problem 64
+Given a binary tree as the usual Prolog term t(X,L,R) (or nil). As a preparation
+for drawing the tree, a layout algorithm is required to determine the position
+of each node in a rectangular grid. Several layout methods are conceivable, one
+of them is shown in the illustration below:
 
 
-
-In this layout strategy, the position of a node v is obtained by the following two rules:
+In this layout strategy, the position of a node v is obtained by the following
+two rules:
 
 x(v) is equal to the position of the node v in the inorder sequence
 y(v) is equal to the depth of the node v in the tree
-Write a function to annotate each node of the tree with a position, where (1,1) in the top left corner or the rectangle bounding the drawn tree.
+Write a function to annotate each node of the tree with a position, where (1,1)
+in the top left corner or the rectangle bounding the drawn tree.
 
 Here is the example tree from the above illustration:
-
+-}
 tree64 = Branch 'n'
                 (Branch 'k'
                         (Branch 'c'
@@ -400,24 +465,30 @@ tree64 = Branch 'n'
                         )
                         Empty
                 )
-Example in Haskell:
+{-|Example in Haskell:
 
 > layout tree64
 Branch ('n',(8,1)) (Branch ('k',(6,2)) (Branch ('c',(2,3)) ...
-Solutions
-
-
-8 Problem 65
+-}
+layout tt = snd $ layout' 1 1 tt
+layout' i _ Empty = (i,Empty)
+layout' i l (Branch a x y) = (vy,Branch (a,(vx,l)) lx ly)
+  where
+    (vx, lx) = layout' i (l+1) x
+    (vy, ly) = layout' (vx+1) (l+1) y
+  
+{-| Problem 65
 An alternative layout method is depicted in the illustration below:
 
 
+Find out the rules and write the corresponding function. Hint: On a given level,
+the horizontal distance between neighboring nodes is constant.
 
-Find out the rules and write the corresponding function. Hint: On a given level, the horizontal distance between neighboring nodes is constant.
-
-Use the same conventions as in problem P64 and test your function in an appropriate way.
+Use the same conventions as in problem P64 and test your function in an
+appropriate way.
 
 Here is the example tree from the above illustration:
-
+-}
 tree65 = Branch 'n'
                 (Branch 'k'
                         (Branch 'c'
@@ -436,21 +507,37 @@ tree65 = Branch 'n'
                         )
                         Empty
                 )
-Example in Haskell:
+{-|Example in Haskell:
 
 > layout tree65
 Branch ('n',(15,1)) (Branch ('k',(7,2)) (Branch ('c',(3,3)) ...
-Solutions
+-}
+leftMostNodes Empty = 0
+leftMostNodes (Branch _ x _) = 1 + leftMostNodes x
 
-
-9 Problem 66
+layout2 tt = layout2' x 1 sep tt
+  where 
+    x = sum . map (2^) . take (leftMostNodes tt) $ [d-2,d-3..]
+    sep = if d >= 2 then 2^(d-2) else 0
+    d = height tt
+layout2' _ _ _ Empty = Empty
+layout2' px py sep (Branch a x y) = Branch (a,(px,py)) xs ys
+  where
+    xs = layout2' (px - sep) (py+1) (sep `div` 2) x
+    ys = layout2' (px + sep) (py+1) (sep `div` 2) y
+    
+{-| Problem 66
 Yet another layout strategy is shown in the illustration below:
 
 
+The method yields a very compact layout while maintaining a certain symmetry in
+every node. Find out the rules and write the corresponding Prolog
+predicate. Hint: Consider the horizontal distance between a node and its
+successor nodes. How tight can you pack together two subtrees to construct the
+combined binary tree?
 
-The method yields a very compact layout while maintaining a certain symmetry in every node. Find out the rules and write the corresponding Prolog predicate. Hint: Consider the horizontal distance between a node and its successor nodes. How tight can you pack together two subtrees to construct the combined binary tree?
-
-Use the same conventions as in problem P64 and P65 and test your predicate in an appropriate way. Note: This is a difficult problem. Don't give up too early!
+Use the same conventions as in problem P64 and P65 and test your predicate in an
+appropriate way. Note: This is a difficult problem. Don't give up too early!
 
 Which layout do you like most?
 
@@ -458,16 +545,20 @@ Example in Haskell:
 
 > layout tree65
 Branch ('n',(5,1)) (Branch ('k',(3,2)) (Branch ('c',(2,3)) ...
-Solutions
+-}
 
-
-10 Problem 67A
+{-| Problem 67A 
 A string representation of binary trees
 
 Somebody represents binary trees as strings of the following type:
 
 a(b(d,e),c(,f(g,)))
-a) Write a Prolog predicate which generates this string representation, if the tree is given as usual (as nil or t(X,L,R) term). Then write a predicate which does this inverse; i.e. given the string representation, construct the tree in the usual form. Finally, combine the two predicates in a single predicate tree_string/2 which can be used in both directions.
+
+a) Write a Prolog predicate which generates this string representation, if the
+tree is given as usual (as nil or t(X,L,R) term). Then write a predicate which
+does this inverse; i.e. given the string representation, construct the tree in
+the usual form. Finally, combine the two predicates in a single predicate
+tree_string/2 which can be used in both directions.
 
 Example in Prolog
 
@@ -481,17 +572,36 @@ Main> stringToTree "x(y,a(,b))" >>= print
 Branch 'x' (Branch 'y' Empty Empty) (Branch 'a' Empty (Branch 'b' Empty Empty))
 Main> let t = cbtFromList ['a'..'z'] in stringToTree (treeToString t) >>= print . (== t)
 True
-Solutions
+-}
+treeToString Empty = ""
+treeToString (Branch a x y) = a : '(' : (treeToString x ++ "," ++ treeToString y ++ ")") 
 
+stringToTree = snd . stringToTree' 
+stringToTree' (',':xs) = (xs,Empty)
+stringToTree' (')':xs) = (xs,Empty)
+stringToTree' (a:',':xs) = (xs,Branch a Empty Empty)
+stringToTree' (a:')':xs) = (xs,Branch a Empty Empty)
+stringToTree' (a:'(':xs) = (dropWhile (==')') zs,Branch a l r)
+  where
+    (ys,l) = stringToTree' xs
+    (zs,r) = stringToTree' (dropWhile (==',') ys)
+  
+{-| Problem 68
+Preorder and inorder sequences of binary trees. We consider binary trees with
+nodes that are identified by single lower-case letters, as in the example of
+problem P67.
 
-11 Problem 68
-Preorder and inorder sequences of binary trees. We consider binary trees with nodes that are identified by single lower-case letters, as in the example of problem P67.
+a) Write predicates preorder/2 and inorder/2 that construct the preorder and
+inorder sequence of a given binary tree, respectively. The results should be
+atoms, e.g. 'abdecfg' for the preorder sequence of the example in problem P67.
 
-a) Write predicates preorder/2 and inorder/2 that construct the preorder and inorder sequence of a given binary tree, respectively. The results should be atoms, e.g. 'abdecfg' for the preorder sequence of the example in problem P67.
+b) Can you use preorder/2 from problem part a) in the reverse direction;
+i.e. given a preorder sequence, construct a corresponding tree? If not, make the
+necessary arrangements.
 
-b) Can you use preorder/2 from problem part a) in the reverse direction; i.e. given a preorder sequence, construct a corresponding tree? If not, make the necessary arrangements.
-
-c) If both the preorder sequence and the inorder sequence of the nodes of a binary tree are given, then the tree is determined unambiguously. Write a predicate pre_in_tree/3 that does the job.
+c) If both the preorder sequence and the inorder sequence of the nodes of a
+binary tree are given, then the tree is determined unambiguously. Write a
+predicate pre_in_tree/3 that does the job.
 
 Example in Haskell:
 
@@ -499,13 +609,32 @@ Main> let { Just t = stringToTree "a(b(d,e),c(,f(g,)))" ;
             po = treeToPreorder t ;
             io = treeToInorder t } in preInTree po io >>= print
 Branch 'a' (Branch 'b' (Branch 'd' Empty Empty) (Branch 'e' Empty Empty)) (Branch 'c' Empty (Branch 'f' (Branch 'g' Empty Empty) Empty))
-Solutions
+-}
+treeToPreorder Empty = []
+treeToPreorder (Branch a x y) = [a] ++ treeToPreorder x ++ treeToPreorder y
 
+treeToInorder Empty = []
+treeToInorder (Branch a x y) = treeToInorder x ++ [a] ++ treeToInorder y
+  
+preInTree "" _ = Empty
+preInTree (p:ps) is = Branch p ls rs
+  where
+    ls = preInTree (take idx ps) lis
+    rs = preInTree (drop idx ps) (tail ris)
+    (lis, ris) = splitAt idx is
+    idx = fromJust $ elemIndex p is
 
-12 Problem 69
+{-| Problem 69
 Dotstring representation of binary trees.
 
-We consider again binary trees with nodes that are identified by single lower-case letters, as in the example of problem P67. Such a tree can be represented by the preorder sequence of its nodes in which dots (.) are inserted where an empty subtree (nil) is encountered during the tree traversal. For example, the tree shown in problem P67 is represented as 'abd..e..c.fg...'. First, try to establish a syntax (BNF or syntax diagrams) and then write a predicate tree_dotstring/2 which does the conversion in both directions. Use difference lists.
+We consider again binary trees with nodes that are identified by single
+lower-case letters, as in the example of problem P67. Such a tree can be
+represented by the preorder sequence of its nodes in which dots (.) are inserted
+where an empty subtree (nil) is encountered during the tree traversal. For
+example, the tree shown in problem P67 is represented as
+'abd..e..c.fg...'. First, try to establish a syntax (BNF or syntax diagrams) and
+then write a predicate tree_dotstring/2 which does the conversion in both
+directions. Use difference lists.
 
 Example in Haskell:
 
@@ -514,14 +643,16 @@ Branch 'a' (Branch 'b' (Branch 'd' Empty Empty) (Branch 'e' Empty Empty)) (Branc
  
 > tree2ds (Branch 'x' (Branch 'y' Empty Empty) (Branch 'z' (Branch '0' Empty Empty) Empty))
 "xy..z0..."
-Solutions
+-}
 
-Multiway Trees
-A multiway tree is composed of a root element and a (possibly empty) set of successors which are multiway trees themselves. A multiway tree is never empty. The set of successor trees is sometimes called a forest.
+{-| Multiway Trees
 
+A multiway tree is composed of a root element and a (possibly empty) set of
+successors which are multiway trees themselves. A multiway tree is never
+empty. The set of successor trees is sometimes called a forest.
+-}
 
-
-2 Problem 70B
+{-| Problem 70B
 (*) Check whether a given term represents a multiway tree.
 
 In Prolog or Lisp, one writes a predicate to check this.
@@ -531,52 +662,69 @@ Example in Prolog:
 ?- istree(t(a,[t(f,[t(g,[])]),t(c,[]),t(b,[t(d,[]),t(e,[])])])).
 Yes
 In Haskell, we define multiway trees as a datatype, as in the module Data.Tree:
-
-data Tree a = Node a [Tree a]
+-}
+data MTree a = MNode a [MTree a]
         deriving (Eq, Show)
-Some example trees:
 
-tree1 = Node 'a' []
+{-| Some example trees:-}
+
+mtree1 = MNode 'a' []
  
-tree2 = Node 'a' [Node 'b' []]
+mtree2 = MNode 'a' [MNode 'b' []]
  
-tree3 = Node 'a' [Node 'b' [Node 'c' []]]
+mtree3 = MNode 'a' [MNode 'b' [MNode 'c' []]]
  
-tree4 = Node 'b' [Node 'd' [], Node 'e' []]
+mtree4 = MNode 'b' [MNode 'd' [], MNode 'e' []]
  
-tree5 = Node 'a' [
-                Node 'f' [Node 'g' []],
-                Node 'c' [],
-                Node 'b' [Node 'd' [], Node 'e' []]
+mtree5 = MNode 'a' [
+                MNode 'f' [MNode 'g' []],
+                MNode 'c' [],
+                MNode 'b' [MNode 'd' [], MNode 'e' []]
                 ]
-The last is the tree illustrated above.
+{-|The last is the tree illustrated above.
 
-As in problem 54A, all members of this type are multiway trees; there is no use for a predicate to test them.
+As in problem 54A, all members of this type are multiway trees; there is no use
+for a predicate to test them.
+-}
 
-3 Problem 70C
+{-| Problem 70C
 (*) Count the nodes of a multiway tree.
 
 Example in Haskell:
 
 Tree> nnodes tree2
 2
-Solutions
+-}
+nnodes (MNode _ xs) = 1 + (sum . map nnodes $ xs)
 
-4 Problem 70
+{-| Problem 70
 (**) Tree construction from a node string.
 
-We suppose that the nodes of a multiway tree contain single characters. In the depth-first order sequence of its nodes, a special character ^ has been inserted whenever, during the tree traversal, the move is a backtrack to the previous level.
+We suppose that the nodes of a multiway tree contain single characters. In the
+depth-first order sequence of its nodes, a special character ^ has been inserted
+whenever, during the tree traversal, the move is a backtrack to the previous
+level.
 
 By this rule, the tree below (tree5) is represented as: afg^^c^bd^e^^^
 
 
+Define the syntax of the string and write a predicate tree(String,Tree) to
+construct the Tree when the String is given. Make your predicate work in both
+directions.
+-}
 
-Define the syntax of the string and write a predicate tree(String,Tree) to construct the Tree when the String is given. Make your predicate work in both directions.
+mkMTree (a:xs) = MNode a ns
+  where
+    (ys,ns) = mkMTrees xs
 
-Solutions
-
-
-5 Problem 71
+mkMTrees [] = ([], [])
+mkMTrees ('^':xs) = (xs, [])
+mkMTrees (a:xs) = (zs, MNode a ts : rs)
+  where
+    (ys,ts) = mkMTrees xs
+    (zs,rs) = mkMTrees ys
+    
+{-| Problem 71
 (*) Determine the internal path length of a tree.
 
 We define the internal path length of a multiway tree as the total sum of the path lengths from the root to all nodes of the tree. By this definition, tree5 has an internal path length of 9.
@@ -587,48 +735,61 @@ Tree> ipl tree5
 9
 Tree> ipl tree4
 2
-Solutions
+-}
+ipl = sum . ipls
+ipls (MNode _ xs) = map (const 1) xs ++ (map (+1) $ concatMap ipls xs)
 
-
-6 Problem 72
+{-| Problem 72
 (*) Construct the bottom-up order sequence of the tree nodes.
 
-Write a predicate bottom_up(Tree,Seq) which constructs the bottom-up sequence of the nodes of the multiway tree Tree.
+Write a predicate bottom_up(Tree,Seq) which constructs the bottom-up sequence of
+the nodes of the multiway tree Tree.
 
 Example in Haskell:
 
 Tree> bottom_up tree5
 "gfcdeba"
-Solutions
+-}
+bottom_up (MNode a xs) = (concatMap bottom_up xs) ++ [a]
 
-
-7 Problem 73
+{-| Problem 73
 (**) Lisp-like tree representation.
 
-There is a particular notation for multiway trees in Lisp. Lisp is a prominent functional programming language, which is used primarily for artificial intelligence problems. As such it is one of the main competitors of Prolog. In Lisp almost everything is a list, just as in Prolog everything is a term.
+There is a particular notation for multiway trees in Lisp. Lisp is a prominent
+functional programming language, which is used primarily for artificial
+intelligence problems. As such it is one of the main competitors of Prolog. In
+Lisp almost everything is a list, just as in Prolog everything is a term.
 
-The following pictures show how multiway tree structures are represented in Lisp.
+The following pictures show how multiway tree structures are represented in
+Lisp.
 
 
-
-Note that in the "lispy" notation a node with successors (children) in the tree is always the first element in a list, followed by its children. The "lispy" representation of a multiway tree is a sequence of atoms and parentheses '(' and ')', which we shall collectively call "tokens". We can represent this sequence of tokens as a Prolog list; e.g. the lispy expression (a (b c)) could be represented as the Prolog list ['(', a, '(', b, c, ')', ')']. Write a predicate tree_ltl(T,LTL) which constructs the "lispy token list" LTL if the tree is given as term T in the usual Prolog notation.
+Note that in the "lispy" notation a node with successors (children) in the tree
+is always the first element in a list, followed by its children. The "lispy"
+representation of a multiway tree is a sequence of atoms and parentheses '(' and
+')', which we shall collectively call "tokens". We can represent this sequence
+of tokens as a Prolog list; e.g. the lispy expression (a (b c)) could be
+represented as the Prolog list ['(', a, '(', b, c, ')', ')']. Write a predicate
+tree_ltl(T,LTL) which constructs the "lispy token list" LTL if the tree is given
+as term T in the usual Prolog notation.
 
 (The Prolog example given is incorrect.)
 
 Example in Haskell:
 
-Tree> display lisp tree1
+Tree> displayLisp tree1
 "a"
-Tree> display lisp tree2
+Tree> displayLisp tree2
 "(a b)"
-Tree> display lisp tree3
+Tree> displayLisp tree3
 "(a (b c))"
-Tree> display lisp tree4
+Tree> displayLisp tree4
 "(b d e)"
-Tree> display lisp tree5
+Tree> displayLisp tree5
 "(a (f g) c (b d e))"
-As a second, even more interesting exercise try to rewrite tree_ltl/2 in a way that the inverse conversion is also possible.
 
-Solutions
-
+As a second, even more interesting exercise try to rewrite tree_ltl/2 in a way
+that the inverse conversion is also possible.  
 -}
+displayLisp (MNode a []) = [a]
+displayLisp (MNode a xs) = '(':a: concatMap ((' ':).displayLisp) xs ++ ")"
