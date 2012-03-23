@@ -8,9 +8,9 @@
 module Euler
     ( digits, digits', toint, fact, primorial, primeDecomp, firstFactor, 
       divisors, totient, sigma0, sigma1, numDivisors, numDivisorsArray,
-      isPrime, isPrime', primes, primesPlus, primesPlusFrom,
-      permutations, isPermutation, combinations, cc, ccvals,
-      isSquare, isIntegral, msqrt, msqrt' ) 
+      isPrime, isPrime', primes, primesPlus, primesPlusFrom, nextPrime,
+      permutations, isPermutation, combinations, cc, ccvals, insertInto,
+      isSquare, isIntegral, msqrt, msqrt', divides, uniques, uniquesInt ) 
     where
 \end{code}
 
@@ -19,10 +19,12 @@ module Euler
 import Data.Char( digitToInt )
 import qualified Data.Map as DM( toList, empty, insert, lookup, Map )
 import Data.Ratio( (%) )
-import Data.List( (\\), foldl' )
+import Data.List( (\\), foldl', permutations )
 import Data.Array.ST( runSTUArray )
 import Data.Array.MArray( newArray, readArray, writeArray )
 import Data.Array.Unboxed( UArray )
+import qualified Data.IntSet as IS( toList, fromList )
+import qualified Data.Set as S( toList, fromList )
 import Control.Monad( forM_ )
 import Control.Parallel( par, pseq )
 import Control.Arrow( second )
@@ -45,6 +47,14 @@ toint = foldl' (\a b-> a * 10 + fromIntegral b) 0
 divisors n = 1 : filter ((==0) . rem n) [2 .. n `div` 2]
 \end{code}
 
+\begin{code}
+uniquesInt = IS.toList . IS.fromList
+\end{code}
+
+\begin{code}
+uniques = S.toList . S.fromList
+\end{code}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{code}
 isSquare x = ix * ix == x
@@ -58,17 +68,23 @@ isIntegral x = (fromIntegral . truncate) x == x
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{code}
-nextPrime i 
+nextPrime n
+    | isPrime n = n
+    | otherwise = nextPrime (n+1)
+\end{code}
+
+\begin{code}
+nextPrimePlus i 
     | i `mod` 6 == 1 = i + 4
     | otherwise = i + 2
 \end{code}
 
 \begin{code}
-primesPlus = 2:3:iterate nextPrime 5
+primesPlus = 2:3:iterate nextPrimePlus 5
 \end{code}
 
 \begin{code}
-primesPlusFrom n = iterate nextPrime n
+primesPlusFrom n = iterate nextPrimePlus n
 \end{code}
 
 \begin{code}
@@ -222,9 +238,13 @@ numDivisorsArray n = runSTUArray $ do
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{code}
-permutations :: Eq a => [a] -> [[a]]
-permutations (x:[]) = [[x]]
-permutations xs = [x:ps | x <- xs, ps <- permutations (xs\\[x])]
+prop_permutations xs = permutations xs == permutations' xs
+\end{code}
+
+\begin{code}
+permutations' :: Eq a => [a] -> [[a]]
+permutations' [] = [[]]
+permutations' xs = [x:ps | x <- xs, ps <- permutations (xs\\[x])]
 \end{code}
 
 \begin{code}
@@ -260,6 +280,13 @@ ccvals amount (x:xs)
     | amount == x = [[x]]
     | amount < 0 = []
     | otherwise = (ccvals amount xs) ++ (map (x:) (ccvals (amount - x) (x:xs)))
+\end{code}
+
+\begin{code}
+insertInto :: Int -> a -> [a] -> [[a]]
+insertInto 0 _ xs = [xs]
+insertInto n v [] = [replicate n v]
+insertInto n v (x:xs) = (map (v:) $ insertInto (n-1) v (x:xs)) ++ (map (x:) $ insertInto n v xs)
 \end{code}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
