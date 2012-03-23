@@ -1,0 +1,4 @@
+This is my own Programmer's SandBox?.
+
+Here you can find a few example programs in different languages, cheat sheets
+for different tools, and everything that I will need to program.
