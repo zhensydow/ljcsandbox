@@ -95,6 +95,29 @@ Configuracion de .emacs
 ;; use spaces instead of tabs
 (setq-default indent-tabs-mode nil)
 
+;; Bind M-F12 to recentf-open-files
+(require 'recentf)
+(recentf-mode 1)
+(setq recentf-max-saved-items 500)
+(setq recentf-max-menu-items 60)
+(global-set-key [(meta f12)] 'recentf-open-files)
+
+;;Bind M-F12 to recentf-open-files
+(require 'recentf)
+(recentf-mode 1)
+(setq recentf-max-saved-items 200)
+(setq recentf-max-menu-items 50)
+(global-set-key [(meta f12)] 'recentf-open-files)
+
+;; Anything configuration
+(require 'anything-match-plugin)
+(require 'anything-config)
+(global-set-key [(meta f2)] 'anything)
+(global-set-key [(meta f3)] 'anything-imenu)
+
+;; Start autocomplete in buffer
+(global-set-key [(meta f1)] 'auto-complete-mode)
+
 ;; =============================================================================
 ;; Highlight changes in buffer
 ;; =============================================================================
