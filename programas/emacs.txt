@@ -61,6 +61,11 @@ Cambiar el encoding / lineas final de carro
 M+x set-buffer-file-coding-system   escribir mac, dos o unix
 (Ctrl+x Enter f)
 
+FUNCIONES UTILES (M+x)
+
+global-auto-revert-mode      fija recarga automatica de ficheros modificados
+
+
 
 Configuracion de .emacs
 ;; =============================================================================
