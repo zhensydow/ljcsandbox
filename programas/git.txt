@@ -1,0 +1,12 @@
+File ~/.gitconfig
+
+[user]
+	name = Luis Cabellos
+	email = zhen.sydow@gmail.com
+[color]
+	diff = auto
+	status = auto
+	branch = auto
+[alias]
+	lol = log --graph --decorate --pretty=oneline --abbrev-commit
+	lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
