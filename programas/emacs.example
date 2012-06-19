@@ -61,6 +61,9 @@
 
 ;; minimap 
 (require 'minimap)
+(global-set-key [(meta f5)] 'minimap-create)
+(global-set-key [(meta f6)] 'minimap-kill)
+
 
 ;; Auto-complete config
 (require 'auto-complete)
