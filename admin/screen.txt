@@ -13,6 +13,7 @@ screen -r name  conectar con una session por nombre
 
 Comandos:
 
+CTRL-a a      envia CTRL-a a la aplicacion
 CTRL-a d	se desconecta de la session actual
 CTRL-a S	divide la pantalla en dos regiones
 CTRL-a space	pasa a la siguiente ventana
