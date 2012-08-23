@@ -5,10 +5,15 @@ screen -r	se conecta con una session anterior sin attach
        		si no saca la lista de sessions con attach
 screen -x 	se conecta a una session con attach
 
+screen -ls    sacar la lista de sessiones activas
+
+screen -S name  crear una session con nombre
+screen -r name  conectar con una session por nombre
 
 
 Comandos:
 
+CTRL-a a      envia CTRL-a a la aplicacion
 CTRL-a d	se desconecta de la session actual
 CTRL-a S	divide la pantalla en dos regiones
 CTRL-a space	pasa a la siguiente ventana
@@ -22,3 +27,6 @@ CTRL-a c	crea una nueva ventana con shell
 
 CTRL-a h        (hardcopy) Escribe la ventana actual al fichero "hardcopy.n"
 CTRL-a H        (log) Inicio/Fin del grabado en el fichero "screenlog.n"
+
+CTRL-a :      ejecutar comandos
+   sessionname name   -> cambia el nombre de la session
