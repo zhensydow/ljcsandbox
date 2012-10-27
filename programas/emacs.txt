@@ -39,6 +39,7 @@ C+x r y	     copiar el rectangulo seleccionado
 C+x r c	     limpiar el rectangulo seleccionado
 
 C+x l        da el numero de lineas del fichero
+M+g g        ir a la linea
 
 C+h b 	     muestra los accesos de teclados actuales
 
