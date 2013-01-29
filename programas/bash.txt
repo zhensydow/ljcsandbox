@@ -1,0 +1,8 @@
+# easy search of folders
+export CDPATH=.:~:~/workspace:~/Dropbox
+
+# easy open of graphical apps
+function gimp
+{
+  command gimp "$@" &
+}
