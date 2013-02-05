@@ -2,6 +2,7 @@
 #include <cstdlib>
 
 #include <vector>
+#include <list>
 #include <algorithm>
 
 #define GL_GLEXT_PROTOTYPES 1
@@ -12,8 +13,6 @@
 #include <GL/glut.h>
 
 #include "shaders.h"
-
-const std::string glslv("1.20");
 
 //------------------------------------------------------------------------------
 const float vertexPositions[] = {
@@ -37,9 +36,6 @@ const float vertexPositions[] = {
 GLuint positionBufferObject = 0;
 GLuint myProgram = 0;
 
-std::string strVertexShader = "ex01."+glslv+".vert";
-std::string strFragmentShader = "ex01."+glslv+".frag";
-
 //------------------------------------------------------------------------------
 void initializeVertexBuffer(){
   glGenBuffers( 1, &positionBufferObject );
@@ -47,18 +43,39 @@ void initializeVertexBuffer(){
   glBindBuffer( GL_ARRAY_BUFFER, positionBufferObject );
   glBufferData( GL_ARRAY_BUFFER, sizeof(vertexPositions), vertexPositions,
                 GL_STATIC_DRAW );
-  glBindBuffer( GL_ARRAY_BUFFER, 0 );
+  glBindBuffer( GL_ARRAY_BUFFER, 0 ;)
 }
 
 void initializeProgram(){
-  std::vector<GLuint> shaders;
+    std::vector<GLuint> shaders;
+    std::list<std::string> available = {"1.20","3.30"};
 
-  shaders.push_back( createShader( GL_VERTEX_SHADER, strVertexShader ) );
-  shaders.push_back( createShader( GL_FRAGMENT_SHADER, strFragmentShader ) );
+    std::string glslv;
 
-  myProgram = createProgram( shaders );
+    const GLubyte * glslVersion = glGetString( GL_SHADING_LANGUAGE_VERSION );
+    std::string sv(reinterpret_cast<const char*>(glslVersion));
+    
+    for( auto name: available ){
+        if( 0 == sv.find(name) ){
+            glslv = name;
+            break;
+        }
+    }
+    
+    if( "" == glslv ){
+        printf( "Invalid shader version: %s\n", sv.c_str());
+        exit(EXIT_FAILURE);
+    }
 
-  std::for_each( shaders.begin(), shaders.end(), glDeleteShader );
+    std::string strVertexShader = "ex01."+glslv+".vert";
+    std::string strFragmentShader = "ex01."+glslv+".frag";
+
+    shaders.push_back( createShader( GL_VERTEX_SHADER, strVertexShader ) );
+    shaders.push_back( createShader( GL_FRAGMENT_SHADER, strFragmentShader ) );
+
+    myProgram = createProgram( shaders );
+
+    std::for_each( shaders.begin(), shaders.end(), glDeleteShader );
 }
 
 //------------------------------------------------------------------------------
