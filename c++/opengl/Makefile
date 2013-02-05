@@ -1,5 +1,6 @@
+PROGRAM=example
 
-all: onionworld
+all: ${PROGRAM}
 
 GCCVERSION=$(shell gcc -dumpversion)
 
@@ -14,8 +15,8 @@ endif
 GLLIBS=$(shell pkg-config --libs gl)
 LIBS=${GLLIBS} -lglut
 
-onionworld: main.o shaders.o fileutils.o
-	${CXX} $^ ${LIBS} -o onionworld
+${PROGRAM}: main.o shaders.o fileutils.o
+	${CXX} $^ ${LIBS} -o ${PROGRAM}
 
 clean:
 	rm -f *.o onionworld

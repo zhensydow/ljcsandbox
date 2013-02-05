@@ -13,6 +13,8 @@
 
 #include "shaders.h"
 
+const std::string glslv("1.20");
+
 //------------------------------------------------------------------------------
 const float vertexPositions[] = {
   0.45f, 0.75f, 0.0f, 1.0f,
@@ -35,8 +37,8 @@ const float vertexPositions[] = {
 GLuint positionBufferObject = 0;
 GLuint myProgram = 0;
 
-std::string strVertexShader = "ex01.vert";
-std::string strFragmentShader = "ex01.frag";
+std::string strVertexShader = "ex01."+glslv+".vert";
+std::string strFragmentShader = "ex01."+glslv+".frag";
 
 //------------------------------------------------------------------------------
 void initializeVertexBuffer(){
@@ -44,7 +46,7 @@ void initializeVertexBuffer(){
 
   glBindBuffer( GL_ARRAY_BUFFER, positionBufferObject );
   glBufferData( GL_ARRAY_BUFFER, sizeof(vertexPositions), vertexPositions,
-		GL_STATIC_DRAW );
+                GL_STATIC_DRAW );
   glBindBuffer( GL_ARRAY_BUFFER, 0 );
 }
 
