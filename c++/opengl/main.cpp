@@ -57,6 +57,7 @@ GLuint colBufferObject = 0;
 GLint posLoc = 0;
 GLint colLoc = 0;
 GLint timeLoc = 0;
+GLint durLoc = 0;
 
 GLuint myProgram = 0;
 
@@ -111,7 +112,7 @@ void initializeProgram(){
     colLoc = glGetAttribLocation( myProgram, "color" );
     timeLoc = glGetUniformLocation( myProgram, "time" );
 
-    GLint durLoc = glGetUniformLocation( myProgram, "loopDuration" );
+    durLoc = glGetUniformLocation( myProgram, "loopDuration" );
     GLint fdurLoc = glGetUniformLocation( myProgram, "fragLoopDuration" );
 
     glUseProgram( myProgram );
@@ -137,6 +138,10 @@ void renderScene(void) {
     glEnableVertexAttribArray( colLoc );
     glVertexAttribPointer( colLoc, 4, GL_FLOAT, GL_FALSE, 0, 0 );
 
+    glUniform1f( durLoc, 4.0f );
+    glDrawArrays( GL_TRIANGLES, 0, 12 );
+
+    glUniform1f( durLoc, 8.0f );
     glDrawArrays( GL_TRIANGLES, 0, 12 );
 
     glDisableVertexAttribArray( posLoc );
