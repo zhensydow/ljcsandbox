@@ -112,9 +112,11 @@ void initializeProgram(){
     timeLoc = glGetUniformLocation( myProgram, "time" );
 
     GLint durLoc = glGetUniformLocation( myProgram, "loopDuration" );
+    GLint fdurLoc = glGetUniformLocation( myProgram, "fragLoopDuration" );
 
     glUseProgram( myProgram );
     glUniform1f( durLoc, 4.0f );
+    glUniform1f( fdurLoc, 10.0f );
     glUseProgram( 0 );
 }
 
