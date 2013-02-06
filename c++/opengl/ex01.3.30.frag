@@ -1,11 +1,12 @@
 #version 330
 
-out vec4 outputColor;
-void main(){
-  float lerpy = gl_FragCoord.y / 500.0f;
-  float lerpx = gl_FragCoord.x / 500.0f;
+smooth in vec4 theColor;
 
-  float rc = mix( 0.0f, 1.0f, lerpy );
-  float gc = mix( 0.0f, 1.0f, lerpx );
-  outputColor =vec4(rc, gc, 0.2f, 1.0f );
+out vec4 outputColor;
+
+void main(){
+  float lerpx = gl_FragCoord.x / 200.0f;
+  float lerpy = gl_FragCoord.y / 200.0f;
+
+  outputColor = mix( vec4(0.1, 0.1, 0.1f, 1.0f ), theColor, lerpy*lerpx );
 }
