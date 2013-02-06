@@ -33,17 +33,46 @@ const float vertexPositions[] = {
   -0.15f, -0.75f, 0.0f, 1.0f,
 };
 
-GLuint positionBufferObject = 0;
+const float vertexColors[] = {
+    1.0f, 0.0f, 0.0f, 1.0f,
+    0.0f, 1.0f, 0.0f, 1.0f,
+    0.0f, 0.0f, 1.0f, 1.0f,
+
+    1.0f, 1.0f, 0.0f, 1.0f,
+    1.0f, 1.0f, 0.0f, 1.0f,
+    1.0f, 1.0f, 0.0f, 1.0f,
+
+    1.0f, 1.0f, 0.0f, 1.0f,
+    1.0f, 1.0f, 0.0f, 1.0f,
+    1.0f, 1.0f, 0.0f, 1.0f,
+
+    1.0f, 0.0f, 0.0f, 1.0f,
+    0.0f, 1.0f, 0.0f, 1.0f,
+    0.0f, 0.0f, 1.0f, 1.0f,
+};
+
+GLuint posBufferObject = 0;
+GLuint colBufferObject = 0;
+
+GLint posloc = 0;
+GLint colloc = 0;
+
 GLuint myProgram = 0;
 
 //------------------------------------------------------------------------------
 void initializeVertexBuffer(){
-  glGenBuffers( 1, &positionBufferObject );
-
-  glBindBuffer( GL_ARRAY_BUFFER, positionBufferObject );
+  glGenBuffers( 1, &posBufferObject );
+  glBindBuffer( GL_ARRAY_BUFFER, posBufferObject );
   glBufferData( GL_ARRAY_BUFFER, sizeof(vertexPositions), vertexPositions,
                 GL_STATIC_DRAW );
-  glBindBuffer( GL_ARRAY_BUFFER, 0 ;)
+
+  glGenBuffers( 1, &colBufferObject );
+
+  glBindBuffer( GL_ARRAY_BUFFER, colBufferObject );
+  glBufferData( GL_ARRAY_BUFFER, sizeof(vertexColors), vertexColors,
+                GL_STATIC_DRAW );
+
+  glBindBuffer( GL_ARRAY_BUFFER, 0 );
 }
 
 void initializeProgram(){
@@ -76,6 +105,9 @@ void initializeProgram(){
     myProgram = createProgram( shaders );
 
     std::for_each( shaders.begin(), shaders.end(), glDeleteShader );
+
+    posloc = glGetAttribLocation( myProgram, "position");
+    colloc = glGetAttribLocation( myProgram, "color");
 }
 
 //------------------------------------------------------------------------------
@@ -84,13 +116,19 @@ void renderScene(void) {
   glClear( GL_COLOR_BUFFER_BIT );
 
   glUseProgram( myProgram );
-  glBindBuffer( GL_ARRAY_BUFFER, positionBufferObject );
-  glEnableVertexAttribArray( 0 );
-  glVertexAttribPointer( 0, 4, GL_FLOAT, GL_FALSE, 0, 0 );
+
+  glBindBuffer( GL_ARRAY_BUFFER, posBufferObject );
+  glEnableVertexAttribArray( posloc );
+  glVertexAttribPointer( posloc, 4, GL_FLOAT, GL_FALSE, 0, 0 );
+
+  glBindBuffer( GL_ARRAY_BUFFER, colBufferObject );
+  glEnableVertexAttribArray( colloc );
+  glVertexAttribPointer( colloc, 4, GL_FLOAT, GL_FALSE, 0, 0 );
 
   glDrawArrays( GL_TRIANGLES, 0, 12 );
 
-  glDisableVertexAttribArray( 0 );
+  glDisableVertexAttribArray( posloc );
+  glDisableVertexAttribArray( colloc);
   glUseProgram( 0 );
 
   glutSwapBuffers();
