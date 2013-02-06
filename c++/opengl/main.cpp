@@ -58,6 +58,8 @@ GLint posLoc = 0;
 GLint colLoc = 0;
 GLint timeLoc = 0;
 GLint durLoc = 0;
+GLint wLoc = 0;
+GLint hLoc = 0;
 
 GLuint myProgram = 0;
 
@@ -111,6 +113,8 @@ void initializeProgram(){
     posLoc = glGetAttribLocation( myProgram, "position" );
     colLoc = glGetAttribLocation( myProgram, "color" );
     timeLoc = glGetUniformLocation( myProgram, "time" );
+    wLoc = glGetUniformLocation( myProgram, "w" );
+    hLoc = glGetUniformLocation( myProgram, "h" );
 
     durLoc = glGetUniformLocation( myProgram, "loopDuration" );
     GLint fdurLoc = glGetUniformLocation( myProgram, "fragLoopDuration" );
@@ -118,6 +122,8 @@ void initializeProgram(){
     glUseProgram( myProgram );
     glUniform1f( durLoc, 4.0f );
     glUniform1f( fdurLoc, 10.0f );
+    glUniform1f( wLoc, 200.0f );
+    glUniform1f( hLoc, 200.0f );
     glUseProgram( 0 );
 }
 
@@ -154,6 +160,10 @@ void renderScene(void) {
 
 void reshape( int w, int h ){
     glViewport( 0, 0, (GLsizei)w, (GLsizei)h );
+    glUseProgram( myProgram );
+    glUniform1f( wLoc, (float)w );
+    glUniform1f( hLoc, (float)h );
+    glUseProgram( 0 );
 }
 
 //------------------------------------------------------------------------------

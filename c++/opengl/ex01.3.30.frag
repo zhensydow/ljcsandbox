@@ -6,14 +6,16 @@ out vec4 outputColor;
 
 uniform float fragLoopDuration;
 uniform float time;
+uniform float w;
+uniform float h;
 
 const vec4 firstColor = vec4(0.0f, 1.0f, 0.0f, 1.0f);
 
 void main(){
     float timeScale = 3.14159f * 2.0f / fragLoopDuration;
 
-    float lerpx = gl_FragCoord.x / 200.0f;
-    float lerpy = gl_FragCoord.y / 200.0f;
+    float lerpx = gl_FragCoord.x / (w==0 ? 1 : w);
+    float lerpy = gl_FragCoord.y / (h==0 ? 1 : h);
 
     float currTime = mod(time, fragLoopDuration);
     float currLerp = sin(currTime * timeScale);
