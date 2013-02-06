@@ -56,17 +56,9 @@ GLuint colBufferObject = 0;
 
 GLint posLoc = 0;
 GLint colLoc = 0;
-GLint offsetLoc = 0;
+GLint timeLoc = 0;
 
 GLuint myProgram = 0;
-
-float offx = 0, offy = 0;
-
-//------------------------------------------------------------------------------
-void calculateOffsets( float & x, float & y ){
-    x = x + ((rand() / float(RAND_MAX)) * 0.1f - 0.05f);
-    y = y + ((rand() / float(RAND_MAX)) * 0.1f - 0.05f);
-}
 
 //------------------------------------------------------------------------------
 void initializeVertexBuffer(){
@@ -117,19 +109,23 @@ void initializeProgram(){
 
     posLoc = glGetAttribLocation( myProgram, "position" );
     colLoc = glGetAttribLocation( myProgram, "color" );
-    offsetLoc = glGetUniformLocation( myProgram, "offset" );
+    timeLoc = glGetUniformLocation( myProgram, "time" );
+
+    GLint durLoc = glGetUniformLocation( myProgram, "loopDuration" );
+
+    glUseProgram( myProgram );
+    glUniform1f( durLoc, 4.0f );
+    glUseProgram( 0 );
 }
 
 //------------------------------------------------------------------------------
 void renderScene(void) {
-    calculateOffsets( offx, offy );
-
     glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
     glClear( GL_COLOR_BUFFER_BIT );
 
     glUseProgram( myProgram );
 
-    glUniform2f( offsetLoc, offx, offy);
+    glUniform1f( timeLoc, glutGet(GLUT_ELAPSED_TIME) / 1000.0f );
 
     glBindBuffer( GL_ARRAY_BUFFER, posBufferObject );
     glEnableVertexAttribArray( posLoc );
