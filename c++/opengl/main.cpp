@@ -54,10 +54,19 @@ const float vertexColors[] = {
 GLuint posBufferObject = 0;
 GLuint colBufferObject = 0;
 
-GLint posloc = 0;
-GLint colloc = 0;
+GLint posLoc = 0;
+GLint colLoc = 0;
+GLint offsetLoc = 0;
 
 GLuint myProgram = 0;
+
+float offx = 0, offy = 0;
+
+//------------------------------------------------------------------------------
+void calculateOffsets( float & x, float & y ){
+    x = x + ((rand() / float(RAND_MAX)) * 0.1f - 0.05f);
+    y = y + ((rand() / float(RAND_MAX)) * 0.1f - 0.05f);
+}
 
 //------------------------------------------------------------------------------
 void initializeVertexBuffer(){
@@ -83,14 +92,14 @@ void initializeProgram(){
 
     const GLubyte * glslVersion = glGetString( GL_SHADING_LANGUAGE_VERSION );
     std::string sv(reinterpret_cast<const char*>(glslVersion));
-    
+
     for( auto name: available ){
         if( 0 == sv.find(name) ){
             glslv = name;
             break;
         }
     }
-    
+
     if( "" == glslv ){
         printf( "Invalid shader version: %s\n", sv.c_str());
         exit(EXIT_FAILURE);
@@ -106,36 +115,42 @@ void initializeProgram(){
 
     std::for_each( shaders.begin(), shaders.end(), glDeleteShader );
 
-    posloc = glGetAttribLocation( myProgram, "position");
-    colloc = glGetAttribLocation( myProgram, "color");
+    posLoc = glGetAttribLocation( myProgram, "position" );
+    colLoc = glGetAttribLocation( myProgram, "color" );
+    offsetLoc = glGetUniformLocation( myProgram, "offset" );
 }
 
 //------------------------------------------------------------------------------
 void renderScene(void) {
-  glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
-  glClear( GL_COLOR_BUFFER_BIT );
+    calculateOffsets( offx, offy );
 
-  glUseProgram( myProgram );
+    glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
+    glClear( GL_COLOR_BUFFER_BIT );
 
-  glBindBuffer( GL_ARRAY_BUFFER, posBufferObject );
-  glEnableVertexAttribArray( posloc );
-  glVertexAttribPointer( posloc, 4, GL_FLOAT, GL_FALSE, 0, 0 );
+    glUseProgram( myProgram );
 
-  glBindBuffer( GL_ARRAY_BUFFER, colBufferObject );
-  glEnableVertexAttribArray( colloc );
-  glVertexAttribPointer( colloc, 4, GL_FLOAT, GL_FALSE, 0, 0 );
+    glUniform2f( offsetLoc, offx, offy);
 
-  glDrawArrays( GL_TRIANGLES, 0, 12 );
+    glBindBuffer( GL_ARRAY_BUFFER, posBufferObject );
+    glEnableVertexAttribArray( posLoc );
+    glVertexAttribPointer( posLoc, 4, GL_FLOAT, GL_FALSE, 0, 0 );
 
-  glDisableVertexAttribArray( posloc );
-  glDisableVertexAttribArray( colloc);
-  glUseProgram( 0 );
+    glBindBuffer( GL_ARRAY_BUFFER, colBufferObject );
+    glEnableVertexAttribArray( colLoc );
+    glVertexAttribPointer( colLoc, 4, GL_FLOAT, GL_FALSE, 0, 0 );
 
-  glutSwapBuffers();
+    glDrawArrays( GL_TRIANGLES, 0, 12 );
+
+    glDisableVertexAttribArray( posLoc );
+    glDisableVertexAttribArray( colLoc);
+    glUseProgram( 0 );
+
+    glutSwapBuffers();
+    glutPostRedisplay();
 }
 
 void reshape( int w, int h ){
-  glViewport( 0, 0, (GLsizei)w, (GLsizei)h );
+    glViewport( 0, 0, (GLsizei)w, (GLsizei)h );
 }
 
 //------------------------------------------------------------------------------
