@@ -5,11 +5,11 @@ all: ${PROGRAM}
 GCCVERSION=$(shell gcc -dumpversion)
 
 GLCFLAGS=$(shell pkg-config --cflags gl)
-CPPFLAGS=-Wall -O2 ${GLCFLAGS}
-ifeq "${GCCVERSION}" "4.5.2"
-	CXXFLAGS=-std=c++0x
-else
+CPPFLAGS=-Wall -O3 ${GLCFLAGS}
+ifneq (,$(findstring 4.7, ${GCCVERSION}))
 	CXXFLAGS=-std=c++11
+else
+	CXXFLAGS=-std=c++0x
 endif
 
 GLLIBS=$(shell pkg-config --libs gl)
