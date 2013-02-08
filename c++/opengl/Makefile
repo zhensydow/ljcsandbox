@@ -1,6 +1,8 @@
-PROGRAM=example
+.PHONY : clean
 
-all: ${PROGRAM}
+PROGRAMS=$(patsubst main%.cpp,example%,$(wildcard main*.cpp))
+
+all: ${PROGRAMS}
 
 GCCVERSION=$(shell gcc -dumpversion)
 
@@ -15,8 +17,8 @@ endif
 GLLIBS=$(shell pkg-config --libs gl)
 LIBS=${GLLIBS} -lglut
 
-${PROGRAM}: main.o shaders.o fileutils.o
-	${CXX} $^ ${LIBS} -o ${PROGRAM}
+example%: main%.o shaders.o fileutils.o
+	${CXX} $^ ${LIBS} -o $@
 
 clean:
-	rm -f *.o onionworld
+	rm -f *.o ${PROGRAMS}
