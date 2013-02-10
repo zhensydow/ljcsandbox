@@ -2,8 +2,6 @@
 #include <cstdlib>
 
 #include <vector>
-#include <list>
-#include <algorithm>
 
 #define GL_GLEXT_PROTOTYPES 1
 #define GL3_PROTOTYPES 1
@@ -140,36 +138,7 @@ void initializeVertexBuffer(){
 }
 
 void initializeProgram(){
-    std::vector<GLuint> shaders;
-    std::list<std::string> available = {"1.20","3.30"};
-
-    std::string glslv;
-
-    const GLubyte * glslVersion = glGetString( GL_SHADING_LANGUAGE_VERSION );
-    std::string sv(reinterpret_cast<const char*>(glslVersion));
-
-    for( auto name: available ){
-        if( 0 == sv.find(name) ){
-            glslv = name;
-            break;
-        }
-    }
-
-    if( "" == glslv ){
-        printf( "Invalid shader version: %s\n", sv.c_str());
-        exit(EXIT_FAILURE);
-    }
-
-    std::string strVertexShader = "ex02."+glslv+".vert";
-    std::string strFragmentShader = "ex02."+glslv+".frag";
-
-    shaders.push_back( createShader( GL_VERTEX_SHADER, strVertexShader ) );
-    shaders.push_back( createShader( GL_FRAGMENT_SHADER, strFragmentShader ) );
-
-    myProgram = createProgram( shaders );
-
-    std::for_each( shaders.begin(), shaders.end(), glDeleteShader );
-
+    myProgram = loadProgram( "ex02" );
     posLoc = glGetAttribLocation( myProgram, "position" );
     colLoc = glGetAttribLocation( myProgram, "color" );
 }
