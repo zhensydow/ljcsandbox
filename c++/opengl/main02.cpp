@@ -14,9 +14,9 @@
 
 //------------------------------------------------------------------------------
 const float vertexPositions[] = {
-    0.25f, 0.25f, 0.75f, 0.1f,
-    0.25f, -0.25f, 0.75f, 0.1f,
-    -0.25f, 0.25f, 0.75f, 0.1f,
+    0.25f, 0.25f, 0.75f, 1.0f,
+    0.25f, -0.25f, 0.75f, 1.0f,
+    -0.25f, 0.25f, 0.75f, 1.0f,
 
      0.25f, -0.25f, 0.75f, 1.0f,
     -0.25f, -0.25f, 0.75f, 1.0f,
@@ -158,7 +158,7 @@ void renderScene(void) {
     glEnableVertexAttribArray( colLoc );
     glVertexAttribPointer( colLoc, 4, GL_FLOAT, GL_FALSE, 0, 0 );
 
-    glDrawArrays( GL_TRIANGLES, 0, 12 );
+    glDrawArrays( GL_TRIANGLES, 0, 36 );
 
     glDisableVertexAttribArray( posLoc );
     glDisableVertexAttribArray( colLoc);
