@@ -1,4 +1,5 @@
-.PHONY : clean
+.SECONDARY:
+.PHONY: clean
 
 PROGRAMS=$(patsubst main%.cpp,example%,$(wildcard main*.cpp))
 
