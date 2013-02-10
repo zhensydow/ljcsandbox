@@ -51,17 +51,17 @@ const float vertexColors[] = {
     0.0f, 0.0f, 1.0f, 1.0f,
 };
 
-GLuint posBufferObject = 0;
-GLuint colBufferObject = 0;
+GLuint posBufferObject{0};
+GLuint colBufferObject{0};
 
-GLint posLoc = 0;
-GLint colLoc = 0;
-GLint timeLoc = 0;
-GLint durLoc = 0;
-GLint wLoc = 0;
-GLint hLoc = 0;
+GLint posLoc{0};
+GLint colLoc{0};
+GLint timeLoc{0};
+GLint durLoc{0};
+GLint wLoc{0};
+GLint hLoc{0};
 
-GLuint myProgram = 0;
+GLuint myProgram{0};
 
 //------------------------------------------------------------------------------
 void initializeVertexBuffer(){
