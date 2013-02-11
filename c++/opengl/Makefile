@@ -5,7 +5,7 @@ PROGRAMS=$(patsubst main%.cpp,example%,$(wildcard main*.cpp))
 
 all: ${PROGRAMS}
 
-GCCVERSION=$(shell gcc -dumpversion)
+GCCVERSION=$(shell ${CXX} -dumpversion)
 
 GLCFLAGS=$(shell pkg-config --cflags gl)
 CPPFLAGS=-Wall -O3 ${GLCFLAGS}
