@@ -13,6 +13,7 @@
 //------------------------------------------------------------------------------
 GLuint createShader( GLenum shaderType, const std::string &filename );
 GLuint createProgram( const std::vector<GLuint> &shaders );
+GLuint loadProgram( const std::string &name );
 
 //------------------------------------------------------------------------------
 #endif//SHADERS_H
