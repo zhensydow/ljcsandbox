@@ -90,9 +90,9 @@ GLuint loadProgram( const std::string &name ){
     const GLubyte * glslVersion = glGetString( GL_SHADING_LANGUAGE_VERSION );
     std::string sv(reinterpret_cast<const char*>(glslVersion));
 
-    for( auto name: available ){
-        if( 0 == sv.find(name) ){
-            glslv = name;
+    for( auto i = available.begin(); i != available.end() ; ++i ){
+        if( 0 == sv.find(*i) ){
+            glslv = *i;
             break;
         }
     }
