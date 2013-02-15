@@ -14,18 +14,50 @@
 
 //------------------------------------------------------------------------------
 const float vertexPositions[] = {
-    0.25f, 0.25f, 0.75f, 1.0f,
-    0.25f, -0.25f, 0.75f, 1.0f,
-    -0.25f, 0.25f, 0.75f, 1.0f,
+    0.25f, 0.0f, 0.75f, 1.0f,
+    0.25f, -0.5f, 0.75f, 1.0f,
+    -0.25f, 0.0f, 0.75f, 1.0f,
+
+    -0.25f, 0.0f, 0.75f, 1.0f,
+    -0.75f, 0.75f, 0.75f, 1.0f,
+    0.0f, 0.5f, 0.75f, 1.0f,
+
+    0.0f, 0.5f, 0.75f, 1.0f,
+    0.25f, 0.5f, 0.75f, 1.0f,
+    0.25f, 0.0f, 0.75f, 1.0f,
+
+    -0.25f, 0.0f, 0.75f, 1.0f,
+    0.0f, 0.5f, 0.75f, 1.0f,
+    0.25f, 0.0f, 0.75f, 1.0f,
 };
 
 const float vertexColors[] = {
-    1.0f, 0.0f, 0.0f, 1.0f,
+    0.0f, 0.0f, 1.0f, 1.0f,
     0.0f, 1.0f, 0.0f, 1.0f,
+    1.0f, 0.0f, 0.0f, 1.0f,
+
+    1.0f, 0.0f, 0.0f, 1.0f,
+    1.0f, 1.0f, 0.0f, 1.0f,
+    1.0f, 0.0f, 1.0f, 1.0f,
+
+    1.0f, 0.0f, 1.0f, 1.0f,
+    1.0f, 1.0f, 0.0f, 1.0f,
+    0.0f, 0.0f, 1.0f, 1.0f,
+
+    1.0f, 0.0f, 0.0f, 1.0f,
+    1.0f, 0.0f, 1.0f, 1.0f,
     0.0f, 0.0f, 1.0f, 1.0f,
 };
 
 const float texCoords[] = {
+    0.0f, 0.0f,
+    0.5f, 0.0f,
+    1.0f, 1.0f,
+
+    0.0f, 0.0f,
+    0.5f, 0.0f,
+    1.0f, 1.0f,
+
     0.0f, 0.0f,
     0.5f, 0.0f,
     1.0f, 1.0f,
@@ -35,11 +67,19 @@ GLuint posBufferObject = 0;
 GLuint colBufferObject = 0;
 GLuint texBufferObject = 0;
 
-GLint posLoc = 0;
-GLint colLoc = 0;
-GLint texLoc = 0;
+GLint posLoc1 = 0;
+GLint colLoc1 = 0;
+GLint texLoc1 = 0;
 
-GLuint myProgram = 0;
+GLint posLoc2 = 0;
+GLint texLoc2 = 0;
+
+GLint posLoc3 = 0;
+GLint colLoc3 = 0;
+
+GLuint myProgram1 = 0;
+GLuint myProgram2 = 0;
+GLuint myProgram3 = 0;
 
 //------------------------------------------------------------------------------
 void initializeVertexBuffer(){
@@ -64,36 +104,83 @@ void initializeVertexBuffer(){
 }
 
 void initializeProgram(){
-    myProgram = loadProgram( "ex03" );
-    posLoc = glGetAttribLocation( myProgram, "position" );
-    colLoc = glGetAttribLocation( myProgram, "color" );
-    texLoc = glGetAttribLocation( myProgram, "tex" );
+    myProgram1 = loadProgram( "ex03a" );
+    posLoc1 = glGetAttribLocation( myProgram1, "position" );
+    colLoc1 = glGetAttribLocation( myProgram1, "color" );
+    texLoc1 = glGetAttribLocation( myProgram1, "tex" );
+
+    myProgram2 = loadProgram( "ex03b" );
+    posLoc2 = glGetAttribLocation( myProgram2, "position" );
+    texLoc2 = glGetAttribLocation( myProgram2, "tex" );
+
+    GLint colLoc2 = glGetUniformLocation( myProgram2, "color" );
+
+    glUseProgram( myProgram2 );
+    glUniform3f( colLoc2, 0.8f, 0.8f, 0.8f );
+    glUseProgram( 0 );
+
+    myProgram3 = loadProgram( "ex03c" );
+    posLoc3 = glGetAttribLocation( myProgram3, "position" );
+    colLoc3 = glGetAttribLocation( myProgram3, "color" );
 }
 
 //------------------------------------------------------------------------------
 void renderScene(void) {
+    constexpr size_t nverts = 3 * 3;
+
     glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
     glClear( GL_COLOR_BUFFER_BIT );
 
-    glUseProgram( myProgram );
+    glUseProgram( myProgram1 );
 
     glBindBuffer( GL_ARRAY_BUFFER, posBufferObject );
-    glEnableVertexAttribArray( posLoc );
-    glVertexAttribPointer( posLoc, 4, GL_FLOAT, GL_FALSE, 0, 0 );
+    glEnableVertexAttribArray( posLoc1 );
+    glVertexAttribPointer( posLoc1, 4, GL_FLOAT, GL_FALSE, 0, 0 );
 
     glBindBuffer( GL_ARRAY_BUFFER, colBufferObject );
-    glEnableVertexAttribArray( colLoc );
-    glVertexAttribPointer( colLoc, 4, GL_FLOAT, GL_FALSE, 0, 0 );
+    glEnableVertexAttribArray( colLoc1 );
+    glVertexAttribPointer( colLoc1, 4, GL_FLOAT, GL_FALSE, 0, 0 );
 
     glBindBuffer( GL_ARRAY_BUFFER, texBufferObject );
-    glEnableVertexAttribArray( texLoc );
-    glVertexAttribPointer( texLoc, 2, GL_FLOAT, GL_FALSE, 0, 0 );
+    glEnableVertexAttribArray( texLoc1 );
+    glVertexAttribPointer( texLoc1, 2, GL_FLOAT, GL_FALSE, 0, 0 );
 
+    glDrawArrays( GL_TRIANGLES, 0, nverts );
+
+    glDisableVertexAttribArray( posLoc1 );
+    glDisableVertexAttribArray( colLoc1 );
+    glDisableVertexAttribArray( texLoc1 );
+
+    glUseProgram( myProgram2 );
+
+    glBindBuffer( GL_ARRAY_BUFFER, posBufferObject );
+    glEnableVertexAttribArray( posLoc2 );
+    glVertexAttribPointer( posLoc2, 4, GL_FLOAT, GL_FALSE, 0, 0 );
+
+    glBindBuffer( GL_ARRAY_BUFFER, texBufferObject );
+    glEnableVertexAttribArray( texLoc2 );
+    glVertexAttribPointer( texLoc2, 2, GL_FLOAT, GL_FALSE, 0, 0 );
+
+    glDrawArrays( GL_TRIANGLES, 0, nverts );
+
+    glDisableVertexAttribArray( posLoc2 );
+    glDisableVertexAttribArray( texLoc2 );
+
+    glUseProgram( myProgram3 );
+
+    glBindBuffer( GL_ARRAY_BUFFER, posBufferObject );
+    glEnableVertexAttribArray( posLoc3 );
+    glVertexAttribPointer( posLoc3, 4, GL_FLOAT, GL_FALSE, 0, (void*)(4*nverts*sizeof(float)) );
+
+    glBindBuffer( GL_ARRAY_BUFFER, colBufferObject );
+    glEnableVertexAttribArray( colLoc3 );
+    glVertexAttribPointer( colLoc3, 4, GL_FLOAT, GL_FALSE, 0, (void*)(4*nverts*sizeof(float)) );
+    
     glDrawArrays( GL_TRIANGLES, 0, 3 );
 
-    glDisableVertexAttribArray( posLoc );
-    glDisableVertexAttribArray( colLoc);
-    glDisableVertexAttribArray( texLoc);
+    glDisableVertexAttribArray( posLoc3 );
+    glDisableVertexAttribArray( colLoc3 );
+
     glUseProgram( 0 );
 
     glutSwapBuffers();
