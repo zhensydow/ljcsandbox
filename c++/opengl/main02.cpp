@@ -14,53 +14,53 @@
 
 //------------------------------------------------------------------------------
 const float vertexPositions[] = {
-    0.25f, 0.25f, 0.75f, 1.0f,
-    0.25f, -0.25f, 0.75f, 1.0f,
-    -0.25f, 0.25f, 0.75f, 1.0f,
+    0.25f, 0.25f, -1.25f, 1.0f,
+    0.25f, -0.25f, -1.25f, 1.0f,
+    -0.25f, 0.25f, -1.25f, 1.0f,
 
-     0.25f, -0.25f, 0.75f, 1.0f,
-    -0.25f, -0.25f, 0.75f, 1.0f,
-    -0.25f,  0.25f, 0.75f, 1.0f,
+     0.25f, -0.25f, -1.25f, 1.0f,
+    -0.25f, -0.25f, -1.25f, 1.0f,
+    -0.25f,  0.25f, -1.25f, 1.0f,
 
-     0.25f,  0.25f, -0.75f, 1.0f,
-    -0.25f,  0.25f, -0.75f, 1.0f,
-     0.25f, -0.25f, -0.75f, 1.0f,
+     0.25f,  0.25f, -2.75f, 1.0f,
+    -0.25f,  0.25f, -2.75f, 1.0f,
+     0.25f, -0.25f, -2.75f, 1.0f,
 
-     0.25f, -0.25f, -0.75f, 1.0f,
-    -0.25f,  0.25f, -0.75f, 1.0f,
-    -0.25f, -0.25f, -0.75f, 1.0f,
+     0.25f, -0.25f, -2.75f, 1.0f,
+    -0.25f,  0.25f, -2.75f, 1.0f,
+    -0.25f, -0.25f, -2.75f, 1.0f,
 
-    -0.25f,  0.25f,  0.75f, 1.0f,
-    -0.25f, -0.25f,  0.75f, 1.0f,
-    -0.25f, -0.25f, -0.75f, 1.0f,
+    -0.25f,  0.25f,  -1.25f, 1.0f,
+    -0.25f, -0.25f,  -1.25f, 1.0f,
+    -0.25f, -0.25f, -2.75f, 1.0f,
 
-    -0.25f,  0.25f,  0.75f, 1.0f,
-    -0.25f, -0.25f, -0.75f, 1.0f,
-    -0.25f,  0.25f, -0.75f, 1.0f,
+    -0.25f,  0.25f,  -1.25f, 1.0f,
+    -0.25f, -0.25f, -2.75f, 1.0f,
+    -0.25f,  0.25f, -2.75f, 1.0f,
 
-     0.25f,  0.25f,  0.75f, 1.0f,
-     0.25f, -0.25f, -0.75f, 1.0f,
-     0.25f, -0.25f,  0.75f, 1.0f,
+     0.25f,  0.25f,  -1.25f, 1.0f,
+     0.25f, -0.25f, -2.75f, 1.0f,
+     0.25f, -0.25f,  -1.25f, 1.0f,
 
-     0.25f,  0.25f,  0.75f, 1.0f,
-     0.25f,  0.25f, -0.75f, 1.0f,
-     0.25f, -0.25f, -0.75f, 1.0f,
+     0.25f,  0.25f,  -1.25f, 1.0f,
+     0.25f,  0.25f, -2.75f, 1.0f,
+     0.25f, -0.25f, -2.75f, 1.0f,
 
-     0.25f,  0.25f, -0.75f, 1.0f,
-     0.25f,  0.25f,  0.75f, 1.0f,
-    -0.25f,  0.25f,  0.75f, 1.0f,
+     0.25f,  0.25f, -2.75f, 1.0f,
+     0.25f,  0.25f,  -1.25f, 1.0f,
+    -0.25f,  0.25f,  -1.25f, 1.0f,
 
-     0.25f,  0.25f, -0.75f, 1.0f,
-    -0.25f,  0.25f,  0.75f, 1.0f,
-    -0.25f,  0.25f, -0.75f, 1.0f,
+     0.25f,  0.25f, -2.75f, 1.0f,
+    -0.25f,  0.25f,  -1.25f, 1.0f,
+    -0.25f,  0.25f, -2.75f, 1.0f,
 
-     0.25f, -0.25f, -0.75f, 1.0f,
-    -0.25f, -0.25f,  0.75f, 1.0f,
-     0.25f, -0.25f,  0.75f, 1.0f,
+     0.25f, -0.25f, -2.75f, 1.0f,
+    -0.25f, -0.25f,  -1.25f, 1.0f,
+     0.25f, -0.25f,  -1.25f, 1.0f,
 
-     0.25f, -0.25f, -0.75f, 1.0f,
-    -0.25f, -0.25f, -0.75f, 1.0f,
-    -0.25f, -0.25f,  0.75f, 1.0f,
+     0.25f, -0.25f, -2.75f, 1.0f,
+    -0.25f, -0.25f, -2.75f, 1.0f,
+    -0.25f, -0.25f,  -1.25f, 1.0f,
 };
 
 const float vertexColors[] = {
@@ -113,8 +113,19 @@ const float vertexColors[] = {
     0.0f, 1.0f, 1.0f, 1.0f,
 };
 
+float perspectiveMatrix[] = {
+    0.0f, 0.0f, 0.0f, 0.0f,
+    0.0f, 0.0f, 0.0f, 0.0f,
+    0.0f, 0.0f, 0.0f, 0.0f,
+    0.0f, 0.0f, 0.0f, 0.0f,
+};
+
+float fFrustumScale = 1.0f;
+
 GLuint posBufferObject = 0;
 GLuint colBufferObject = 0;
+
+GLuint perspectiveMatrixUnif = 0;
 
 GLint posLoc = 0;
 GLint colLoc = 0;
@@ -141,6 +152,24 @@ void initializeProgram(){
     myProgram = loadProgram( "ex02" );
     posLoc = glGetAttribLocation( myProgram, "position" );
     colLoc = glGetAttribLocation( myProgram, "color" );
+
+    auto offsetUnif = glGetUniformLocation( myProgram, "offset" );
+
+    perspectiveMatrixUnif = glGetUniformLocation( myProgram, "perspectiveMatrix" );
+
+    float fzNear = 0.5f; 
+    float fzFar = 3.0f;
+
+    perspectiveMatrix[0] = fFrustumScale;
+    perspectiveMatrix[5] = fFrustumScale;
+    perspectiveMatrix[10] = (fzFar + fzNear) / (fzNear - fzFar);
+    perspectiveMatrix[14] = (2 * fzFar * fzNear) / (fzNear - fzFar);
+    perspectiveMatrix[11] = -1.0f;
+
+    glUseProgram( myProgram );
+    glUniform2f( offsetUnif, 1.5f, 0.5f );
+    glUniformMatrix4fv( perspectiveMatrixUnif, 1, GL_FALSE, perspectiveMatrix );
+    glUseProgram( 0 );
 }
 
 //------------------------------------------------------------------------------
@@ -169,6 +198,13 @@ void renderScene(void) {
 }
 
 void reshape( int w, int h ){
+    perspectiveMatrix[0] = fFrustumScale/(w/static_cast<float>(h));
+    perspectiveMatrix[5] = fFrustumScale;
+    
+    glUseProgram( myProgram );
+    glUniformMatrix4fv( perspectiveMatrixUnif, 1, GL_FALSE, perspectiveMatrix );
+    glUseProgram( 0 );
+
     glViewport( 0, 0, (GLsizei)w, (GLsizei)h );
 }
 
