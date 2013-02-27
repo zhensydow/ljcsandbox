@@ -1,0 +1,60 @@
+\documentclass{beamer}
+
+\usepackage{aurical}
+\usepackage[T1]{fontenc}
+\usepackage{setspace}
+\usepackage{color}
+
+\setbeamertemplate{navigation symbols}{}
+
+\definecolor{madwrite}{RGB}{25,25,112}
+
+\usepackage{rotating}
+\usepackage[first=-6,last=6]{lcg}
+\makeatletter
+\newcommand{\globalrand}{\rand\global\cr@nd\cr@nd}
+\makeatother
+
+\newcommand{\randomrotation}[1]{\globalrand\turnbox{\value{rand}}{#1}\phantom{#1}}
+
+\makeatletter
+\def\cthulhu#1{%
+  \begin{spacing}{1.5}
+  \Fontauri
+  \bfseries \large
+  \@cthulhu#1 \@empty
+  \end{spacing}
+}
+\def\@cthulhu#1 #2{%
+  \randomrotation{#1}\space
+  \ifx #2\@empty\else
+  \expandafter\@cthulhu
+  \fi
+  #2%
+}
+\makeatother
+
+\newcommand{\cthulhuframe}[2][]{
+{
+  \setbeamertemplate{headline}{}
+  \usebackgroundtemplate{\includegraphics[width=\paperwidth]{cthulhu_bg.jpg}}%
+  \begin{frame}[plain]
+    \centering
+    \color{madwrite}
+    \cthulhu{#2}
+    \cthulhu{#1}
+  \end{frame}
+}
+}
+
+\newcommand{\eldersign}{
+  \raisebox{-.5\height}{\includegraphics[height=3ex]{cthulhu_sign}}
+}
+
+\begin{document}
+
+\cthulhuframe{
+A quien lo lea. Probando a escribir una carta a mano. Es difícil hacerlo con la presion de escribir recto sin usar regla.\eldersign
+}
+
+\end{document}
