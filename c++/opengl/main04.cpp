@@ -210,7 +210,7 @@ void renderScene(void) {
     glDrawElements( GL_TRIANGLES, 24, GL_UNSIGNED_SHORT, 0 );
 
     glBindVertexArray( vaoObject2 );
-    glUniform3f( offsetUnif, 0.0f, 0.0f, 0.0f );
+    glUniform3f( offsetUnif, 0.0f, 0.0f, -1.0f );
     glDrawElements( GL_TRIANGLES, 24, GL_UNSIGNED_SHORT, 0 );
 
     glBindVertexArray( 0 );
