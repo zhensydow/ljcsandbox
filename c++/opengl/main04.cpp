@@ -207,11 +207,11 @@ void renderScene(void) {
     glUseProgram( myProgram );
 
     glBindVertexArray( vaoObject1 );
-    glUniform3f( offsetUnif, 0.0f, 0.0f, 0.0f );
+    glUniform3f( offsetUnif, 0.0f, 0.0f, 0.9f );
     glDrawElements( GL_TRIANGLES, 24, GL_UNSIGNED_SHORT, 0 );
 
     glBindVertexArray( vaoObject2 );
-    glUniform3f( offsetUnif, 0.0f, 0.0f, -0.2f );
+    glUniform3f( offsetUnif, 0.0f, 0.0f, -1.0f );
     glDrawElements( GL_TRIANGLES, 24, GL_UNSIGNED_SHORT, 0 );
 
     glBindVertexArray( 0 );
@@ -233,33 +233,54 @@ void reshape( int w, int h ){
 }
 
 //------------------------------------------------------------------------------
+void keyPressed( unsigned char key, int x, int y ){
+    static bool bDepthClampingActive = false;
+
+    switch( key ){
+    case 27:
+        std::terminate(); //glutLeaveMainLoop();
+        break;
+
+    case 32:
+        if(bDepthClampingActive){
+            glDisable( GL_DEPTH_CLAMP );
+        }else{
+            glEnable( GL_DEPTH_CLAMP );
+        }
+
+        bDepthClampingActive = !bDepthClampingActive;
+        break;
+    }
+}
+
+//------------------------------------------------------------------------------
 int main(int argc, char **argv ){
-  // init GLUT and create Window
-  glutInit( &argc, argv );
-  glutInitDisplayMode( GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA );
-  glutInitWindowSize( 320, 320 );
-  glutCreateWindow( "Onion World" );
+    // init GLUT and create Window
+    glutInit( &argc, argv );
+    glutInitDisplayMode( GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA );
+    glutInitWindowSize( 320, 320 );
+    glutCreateWindow( "Onion World" );
 
-  initializeProgram();
-  initializeVertexBuffer();
-  initializeVertexArrayObjects();
+    initializeProgram();
+    initializeVertexBuffer();
+    initializeVertexArrayObjects();
 
-  glEnable( GL_CULL_FACE );
-  glCullFace( GL_BACK );
-  glFrontFace( GL_CW );
+    glEnable( GL_CULL_FACE );
+    glCullFace( GL_BACK );
+    glFrontFace( GL_CW );
 
-  glEnable( GL_DEPTH_TEST );
-  glDepthMask( GL_TRUE );
-  glDepthFunc( GL_LEQUAL );
-  glDepthRange( 0.0, 1.0f );
+    glEnable( GL_DEPTH_TEST );
+    glDepthMask( GL_TRUE );
+    glDepthFunc( GL_LEQUAL );
+    glDepthRange( 0.0, 1.0f );
 
-  // register callbacks
-  glutDisplayFunc( renderScene );
-  glutReshapeFunc( reshape );
+    // register callbacks
+    glutDisplayFunc( renderScene );
+    glutReshapeFunc( reshape );
+    glutKeyboardFunc( keyPressed );
+    glutMainLoop();
 
-  glutMainLoop();
-
-  return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }
 
 //------------------------------------------------------------------------------
