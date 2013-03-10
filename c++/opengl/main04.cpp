@@ -201,7 +201,8 @@ void initializeVertexArrayObjects(){
 //------------------------------------------------------------------------------
 void renderScene(void) {
     glClearColor( 0.0f, 0.0f, 0.0f, 0.0f );
-    glClear( GL_COLOR_BUFFER_BIT );
+    glClearDepth( 1.0f );
+    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
     glUseProgram( myProgram );
 
@@ -210,7 +211,7 @@ void renderScene(void) {
     glDrawElements( GL_TRIANGLES, 24, GL_UNSIGNED_SHORT, 0 );
 
     glBindVertexArray( vaoObject2 );
-    glUniform3f( offsetUnif, 0.0f, 0.0f, -1.0f );
+    glUniform3f( offsetUnif, 0.0f, 0.0f, -0.5f );
     glDrawElements( GL_TRIANGLES, 24, GL_UNSIGNED_SHORT, 0 );
 
     glBindVertexArray( 0 );
@@ -246,6 +247,11 @@ int main(int argc, char **argv ){
   glEnable( GL_CULL_FACE );
   glCullFace( GL_BACK );
   glFrontFace( GL_CW );
+
+  glEnable( GL_DEPTH_TEST );
+  glDepthMask( GL_TRUE );
+  glDepthFunc( GL_LEQUAL );
+  glDepthRange( 0.0, 1.0f );
 
   // register callbacks
   glutDisplayFunc( renderScene );
