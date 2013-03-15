@@ -1,0 +1,7 @@
+# name: doxygen file
+# key: doxfile
+# --
+/** @file `(file-name-nondirectory (buffer-file-name))`
+    @brief ${1:Info}
+    @author Luis Cabellos
+ */
