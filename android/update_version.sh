@@ -8,5 +8,5 @@ if [ -f $FILE ] ; then
     sed_script="s/\(android:versionCode[^=]*=[^\"]*\"\)[^\"]*\"/\1$new_version\"/"
     sed -i $sed_script $FILE
 else
-    echo "Error: there is no AndroidManifest.xml file"
+    echo "Error: there is no $FILE file"
 fi
