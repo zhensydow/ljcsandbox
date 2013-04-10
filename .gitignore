@@ -2,3 +2,7 @@
 *.hi
 *.pyc
 *.aux
+
+
+# per-folder ignores
+/c++/opengl/example*
