@@ -24,7 +24,7 @@
 
 #declare sphereMat = material {
   texture {
-    pigment { color rgb <1.0, 1.0, 1.0, 0.5> }
+    pigment { color rgbf <1.0, 1.0, 1.0, 0.5> }
     finish { ambient defaultAmbient }
   }
 }

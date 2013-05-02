@@ -1,3 +1,4 @@
+#version 3.6;
 #include "colors.inc"
 
 #declare RADIOSITY_ON=1;
@@ -8,6 +9,7 @@
 #include "rad01_mat.inc"
 
 global_settings { 
+  assumed_gamma 1.0
   ambient_light White
     max_trace_level select( FAST_PREVIEW, 2, 5, 10 )
 
