@@ -4,4 +4,5 @@
 /** @file `(file-name-nondirectory (buffer-file-name))`
     @brief ${1:Info}
     @author Luis Cabellos
+    @date `(format-time-string "%Y-%m-%d")`
  */
