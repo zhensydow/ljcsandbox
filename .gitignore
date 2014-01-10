@@ -3,6 +3,18 @@
 *.pyc
 *.aux
 
-
 # per-folder ignores
 /c++/opengl/example*
+
+/latex/*.log
+/latex/*/*.log
+/latex/*.nav
+/latex/*/*.nav
+/latex/*.pdf
+/latex/*/*.pdf
+/latex/*.out
+/latex/*/*.out
+/latex/*.snm
+/latex/*/*.snm
+/latex/*.toc
+/latex/*/*.toc

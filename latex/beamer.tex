@@ -1,0 +1,89 @@
+\documentclass{beamer}
+\usepackage[latin1]{inputenc}
+\usepackage{colortbl}
+
+\usetheme{Warsaw}
+
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{Layout}
+    \tableofcontents[currentsection,currentsubsection]
+  \end{frame}
+}
+
+\title[Beamer Presentation]{Example of presentation in Beamer\\How to make a presentation with LaTeX?}
+\author{Luis Cabellos}
+\institute{IFCA}
+\date{\today}
+
+\begin{document}
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\section{Introduction}
+
+\begin{frame}{Introduction}
+  This is a short example in Beamer class.
+\end{frame}
+
+\section{Detail}
+
+\begin{frame}{Detail I}
+  \begin{itemize}[<+->]
+  \item List of
+  \item Continusly
+  \item Showed
+  \item Items
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Detail II}
+  Blocks:
+  \pause
+  \begin{block}{Normal Block}
+    Normal Block
+  \end{block}
+  \pause
+  \begin{alertblock}{Alert Block}
+    Alert Block
+  \end{alertblock}
+  \pause
+  \begin{exampleblock}{Example Block}
+    Example Block
+  \end{exampleblock}
+\end{frame}
+
+\section{Conclusion}
+
+\begin{frame}{Conclusion I}
+  \begin{center}
+    \begin{tabular}{lc<{\onslide<2->}c<{\onslide<3->}c<{\onslide<4->}c<{\onslide}c}
+      \bf Class & \bf A & \bf B & \bf C & \bf D \\
+      \hline
+      \bf X     & 1 & 2 & 3 & 4 \\
+      \bf Y     & 3 & 4 & 5 & 6 \\
+      \bf Z     &5&6&7&8
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Conclusion II}
+  \begin{center}
+    \begin{tabular}{lccccc}
+      \bf Class & \bf A & \bf B & \bf C & \bf D \\
+      \hline
+      \pause \bf X     & 1 & 2 & 3 & 4 \\
+      \pause \bf Y     & 3 & 4 & 5 & 6 \\
+      \pause \bf Z     &5&6&7&8
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}{Conclusion III}
+  This is a short introduction to Beamer class.
+\end{frame}
+
+\end{document}
