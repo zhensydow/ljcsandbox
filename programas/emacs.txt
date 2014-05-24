@@ -1,61 +1,61 @@
 En los atajos de teclado
-C   equivale a Control
-M   equivale a ALT
-<RET> pulsar boton return
+C       equivale a Control
+M       equivale a ALT
+<RET>   pulsar boton return
 
 por ejemplo:
-C+x C+s			pulsar control+x y luego control+s
+C+x C+s			        pulsar control+x y luego control+s
 M+x funcion <RET>       pulsar ALT+x, escribir funcion y pulsar return
 
 C+g          Cancelar un comando
 
-C+x C+s	     Salvar fichero
-C+x C+f	     Abrir fichero
-C+x k	     cerrar buffer
-C+x b	     cambiar al buffer anterior
-C+x C+b	     listar buffers abiertos
-C+x C+c	     cerrar emacs
+C+x C+s      Salvar fichero
+C+x C+f      Abrir fichero
+C+x k        cerrar buffer
+C+x b        cambiar al buffer anterior
+C+x C+b      listar buffers abiertos
+C+x C+c      cerrar emacs
 
-M+x <funcion> <RET>    ejecutar <funcion> de emacs
-M+x customize-face <RET>       ejecuta la seleccion de fuente
+M+x <funcion> <RET>      ejecutar <funcion> de emacs
+M+x customize-face <RET> ejecuta la seleccion de fuente
 M+x <len>-mode <RET>     cambiar el lenguaje actual a <len> ( p.e: c++-mode )
-M+!	     ejecutar comando shell
+M+!          ejecutar comando shell
 
-C+x 1	     quitar pantalla partida
-C+x 2	     partir pantalla horizontalmente
-C+x 3	     partir pantalla verticalmente
-C+x o	     cambiar de pantalla
+C+x 1        quitar pantalla partida
+C+x 2        partir pantalla horizontalmente
+C+x 3        partir pantalla verticalmente
+C+x o        cambiar de pantalla
 
-C+space	     marca inicio de bloque, donde esta el cursor actualmente
-M+w	     copiar desde el inicio del bloque hasta posicion del cursor
-C+w	     cortar deste el inicio del bloque hasta posicion del cursor
-C+y	     pegar
-C+_	     undo
+C+space      marca inicio de bloque, donde esta el cursor actualmente
+M+w          copiar desde el inicio del bloque hasta posicion del cursor
+C+w          cortar deste el inicio del bloque hasta posicion del cursor
+C+y          pegar
+C+_          undo
 C+x h        selecciona todo el buffer
 
-C+x r k	     cortar el rectangulo seleccionado
-C+x r d	     borrar el rectangulo seleccionad
-C+x r y	     copiar el rectangulo seleccionado
-C+x r c	     limpiar el rectangulo seleccionado
+C+x r k      cortar el rectangulo seleccionado
+C+x r d      borrar el rectangulo seleccionad
+C+x r y      copiar el rectangulo seleccionado
+C+x r c      limpiar el rectangulo seleccionado
 
 C+x l        da el numero de lineas del fichero
 M+g g        ir a la linea
 
-C+h b 	     muestra los accesos de teclados actuales
+C+h b        muestra los accesos de teclados actuales
 
 Comandos de Subversion
 M+x svn-status  obtener estado de svn de un directorio
 C+x M+s s       obtener estado de svn de directorio actual abre *svn-status*
-g		(*svn-status*) actualizar ventana
-<RET>		(*svn-status*) editar el fichero del cursor
-m		(*svn-status*) marca archivo selecionado
-u		(*svn-status*) quita marca en archivo seleccionado
-c   		(*svn-status*) commit (archivos marcados si hay)
-r		(*svn-status*) revert
-U		(*svn-status*) update
-l		(*svn-status*) log
-=		(*svn-status*) diff
-$		(*svn-status*) expande/oculta directorio
+g		        (*svn-status*) actualizar ventana
+<RET>		    (*svn-status*) editar el fichero del cursor
+m		        (*svn-status*) marca archivo selecionado
+u		        (*svn-status*) quita marca en archivo seleccionado
+c               (*svn-status*) commit (archivos marcados si hay)
+r		        (*svn-status*) revert
+U		        (*svn-status*) update
+l		        (*svn-status*) log
+=		        (*svn-status*) diff
+$		        (*svn-status*) expande/oculta directorio
 
 
 Cambiar el encoding / lineas final de carro
@@ -129,6 +129,18 @@ Configuracion de .emacs
 (ac-config-default)
 (set-cursor-color "white")
 
+;; Line compress
+(make-face 'mundane-line-face)
+(set-face-attribute 'mundane-line-face nil :height 0.7)
+
+;; Then in a prog-mode hook:
+(defun add-mundane-line-font-lock ()
+  (setq font-lock-multiline t)
+  (font-lock-add-keywords nil '(("^[ \t]*\n" 0
+                                 'mundane-line-face prepend))))
+;; add to each program
+;; (add-hook 'prog-mode-hook 'add-mundane-line-font-lock)
+
 ;; =============================================================================
 ;; Highlight changes in buffer
 ;; =============================================================================
@@ -147,6 +159,10 @@ Configuracion de .emacs
 (require 'tramp)
 (setq tramp-default-method "scp")
 
+;; =============================================================================
+;; C++
+;; =============================================================================
+(add-hook 'c++-mode-hook 'add-mundane-line-font-lock)
 
 ;; =============================================================================
 ;; Haskell
@@ -192,4 +208,3 @@ Configuracion de .emacs
 (setq default-tab-width 4)
 (setq tab-width 4)
 (setq c-basic-offset 4)
-
