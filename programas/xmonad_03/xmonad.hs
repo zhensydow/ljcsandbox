@@ -13,6 +13,7 @@ import XMonad.Layout.ShowWName
 import XMonad.Layout.PerWorkspace
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Tabbed
+import XMonad.Layout.TwoPane
 import XMonad.Prompt
 import XMonad.Prompt.Ssh
 import qualified XMonad.StackSet as W
