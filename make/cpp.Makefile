@@ -1,18 +1,28 @@
-CC = gcc
-CFLAGS = -Wall -Werror
-LDFLAGS = -lstdc++
-HEADERS = Class.h
-SOURCES = main.cpp Class.cpp
-OBJECTS = $(SOURCES:.cpp=.o)
-PROGRAM = program
+CC=gcc
+CXX=g++
+RM=rm -f
+CFLAGS=
+CPPFLAGS=
+CXXFLAGS=-std=c++11 -Wall -Werror
+LDFLAGS=
+LDLIBS=
+
+HEADERS=Class.hpp
+SRCS=main.cpp Class.cpp
+OBJS=$(subst .cpp,.o,$(SRCS))
+PROGRAM=program
 
 all: $(PROGRAM)
 
 clean:
-	rm -rf *~ *.o $(PROGRAM)
+	$(RM) *~ $(OBJS)
 
-%.o: %.cpp $(HEADERS)
-	$(CC) $(CFLAGS) -c $<
+dist-clean: clean
+	$(RM) $(PROGRAM)
 
-$(PROGRAM): $(OBJECTS)
-	$(CC) $(LDFLAGS) -o $@ $(OBJECTS)
+$(PROGRAM): $(OBJS)
+	$(CXX) $(LDFLAGS) -o $(PROGRAM) $(OBJS) $(LDLIBS)
+
+Class.o: Class.cpp $(HEADERS)
+main.o: main.cpp $(HEADERS)
+
