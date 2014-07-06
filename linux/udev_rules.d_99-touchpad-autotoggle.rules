@@ -1,0 +1,4 @@
+SUBSYSTEM!="usb", GOTO="touchpad-autotoggle_end"
+ACTION=="add",    ATTR{bInterfaceClass}="03", ATTR{bInterfaceSubClass}="01", ATTR{bInterfaceProtocol}="02", RUN+="/usr/local/bin/toggleTouchpad.sh off"
+ACTION=="remove", ATTR{bInterfaceClass}="03", ATTR{bInterfaceSubClass}="01", ATTR{bInterfaceProtocol}="02", RUN+="/usr/local/bin/toggleTouchpad.sh on"
+LABEL="touchpad-autotoggle_end"
