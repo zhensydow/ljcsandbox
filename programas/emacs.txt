@@ -70,6 +70,16 @@ global-auto-revert-mode      fija recarga automatica de ficheros modificados
 
 Configuracion de .emacs
 ;; =============================================================================
+;; FONT
+;; Find font running on shell: $  fc-list | grep -i "name"
+;; E.g:  M+ , Inconsolata, ProggyClean, ProFont
+;; =============================================================================
+(set-frame-font "ProggyCleanTT")
+(set-face-attribute 'default (selected-frame) :height 100)
+(set-face-attribute 'default (selected-frame) :foreground "white")
+(set-face-attribute 'default (selected-frame) :background "black")
+
+;; =============================================================================
 ;; configurar ficheros de backup
 ;; =============================================================================
 (setq version-control t never)
