@@ -71,6 +71,9 @@ global-auto-revert-mode      fija recarga automatica de ficheros modificados
 Configuracion de .emacs
 ;; =============================================================================
 ;; FONT
+;; move fonts ttf to ~/.local/share/fonts
+;; run $ fc-cache --verbose
+;; or install, e.g:  apt-get install fonts-mplus fonts-inconsolata
 ;; Find font running on shell: $  fc-list | grep -i "name"
 ;; E.g:  M+ , Inconsolata, ProggyClean, ProFont
 ;; =============================================================================
