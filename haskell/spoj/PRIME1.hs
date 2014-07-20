@@ -9,8 +9,18 @@ primes = 2:3:primes'
     primes' = p : filter isPrime' candidates
     isPrime' n = all (not . divides n) $ takeWhile (\p -> p*p <= n) primes'
 
+isPrime :: Int -> Bool
+isPrime 1 = False
+isPrime 2 = True
+isPrime n = all (not . divides n) $ takeWhile (\p -> p*p <= n) primes
+
 primesFromTo :: Int -> Int -> [Int]
-primesFromTo m n = dropWhile (<m) $ takeWhile (n>=) primes
+primesFromTo m n = takeWhile (n>=) $ filter isPrime $ candidatesFromTo m
+
+candidatesFromTo :: Int -> [Int]
+candidatesFromTo m = m:[6*k+r | k <- [ka..], r <- [1,5]]
+  where
+    ka = ((m - 1) `div` 6) + 1
 
 testCase :: IO ()
 testCase = do
