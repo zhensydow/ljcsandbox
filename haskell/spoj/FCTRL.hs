@@ -1,4 +1,5 @@
 import Data.List( nub, foldl' )
+import Control.Monad( liftM, replicateM_ )
 
 fact1 n = product [1..n]
 
@@ -38,6 +39,12 @@ sum11 (a2,b2) a = (a1+a2,b1+b2)
 
 fact5 :: Int -> (Int,Int)
 fact5 n = foldl' sum11 (0,0) [2..n]
-z5 = fact5
+z5 = (\(a,b) -> min a b ) . fact5
 
-main = print $ z5 2345611
+testCase = do
+  val <- getLine
+  print (z5 (read val))
+
+main = do
+  num <- getLine
+  replicateM_ (read num) testCase
