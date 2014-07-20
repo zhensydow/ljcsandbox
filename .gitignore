@@ -3,6 +3,8 @@
 *.pyc
 *.aux
 
+a.out
+
 # per-folder ignores
 /c++/opengl/example*
 
