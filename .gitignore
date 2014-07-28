@@ -4,6 +4,7 @@
 *.aux
 
 a.out
+build/
 
 # per-folder ignores
 /c++/opengl/example*
