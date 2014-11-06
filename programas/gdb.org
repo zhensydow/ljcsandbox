@@ -1,0 +1,18 @@
+* Debug a coredump
+
+** Create the coredump 
+
+$ ulimit -c unlimited
+$ [Execute program to fail]
+
+** Execute gdb with core
+
+$ gdb program core.pid
+
+(gdb) directory "DIR"     -- add source directory
+(gdb) bt                  -- show backtrace
+(gdb) info frame          -- display current frame
+(gdb) info args           -- display frame parameters
+(gdb) info locals         -- display local variables
+(gdb) frame N             -- change to frame N
+
