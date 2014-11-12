@@ -17,7 +17,9 @@ The monad of parsers
 >
 > instance Monad Parser where
 >    return v                   =  P (\inp -> [(v,inp)])
->    p >>= f                    =  undefined -- you will need to implement this in an exercise
+>    p >>= f                    =  P (\inp -> case parse p inp of
+>                                             [] -> []
+>                                             [(v,out)] -> parse (f v) out)
 > 
 > instance MonadPlus Parser where
 >    mzero                      =  P (\inp -> [])
@@ -94,7 +96,10 @@ Derived primitives
 >                                     return (read xs)
 >
 > int                           :: Parser Int
-> int                           =  undefined -- you will need to implement this in an exercise
+> int                           =  (do char '-'
+>                                      n <- nat
+>                                      return (-n))
+>                                  +++ nat
 > 
 > space                         :: Parser ()
 > space                         =  do many (sat isSpace)
@@ -120,3 +125,11 @@ Ignoring spacing
 >
 > symbol                        :: String -> Parser String
 > symbol xs                     =  token (string xs)
+
+> comment :: Parser ()
+> comment = do
+>   string "--"
+>   many (sat (/= '\n'))
+>   return ()
+
+
