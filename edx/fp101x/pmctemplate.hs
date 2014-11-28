@@ -19,7 +19,7 @@ instance Show Action where
 -- ===================================
 
 action :: Concurrent a -> Action
-action = error "You have to implement action"
+action (Concurrent f) = f (\_-> Stop)
 
 
 -- ===================================
@@ -27,7 +27,7 @@ action = error "You have to implement action"
 -- ===================================
 
 stop :: Concurrent a
-stop = error "You have to implement stop"
+stop = Concurrent (\f -> Stop)
 
 
 -- ===================================
@@ -35,18 +35,17 @@ stop = error "You have to implement stop"
 -- ===================================
 
 atom :: IO a -> Concurrent a
-atom = error "You have to implement atom"
-
+atom x = Concurrent (\f -> Atom (x >>= return . f))
 
 -- ===================================
 -- Ex. 3
 -- ===================================
 
 fork :: Concurrent a -> Concurrent ()
-fork = error "You have to implement fork"
+fork c = Concurrent (\f -> Fork (action c) (f ()))
 
 par :: Concurrent a -> Concurrent a -> Concurrent a
-par = error "You have to implement par"
+par (Concurrent c1) (Concurrent c2) = Concurrent (\f -> Fork (c1 f) (c2 f))
 
 
 -- ===================================
@@ -54,16 +53,19 @@ par = error "You have to implement par"
 -- ===================================
 
 instance Monad Concurrent where
-    (Concurrent f) >>= g = error "You have to implement >>="
+    (Concurrent f) >>= g = Concurrent (\c -> f (\a -> let (Concurrent h) = g a in h c))
     return x = Concurrent (\c -> c x)
-
 
 -- ===================================
 -- Ex. 5
 -- ===================================
 
 roundRobin :: [Action] -> IO ()
-roundRobin = error "You have to implement roundRobin"
+roundRobin [] = return ()
+roundRobin (x:xs) = case x of
+                      Atom x -> x >>= \y -> roundRobin (xs ++[y])
+                      Fork a1 a2 -> roundRobin (xs ++ [a1,a2])
+                      Stop -> roundRobin xs
 
 -- ===================================
 -- Tests
