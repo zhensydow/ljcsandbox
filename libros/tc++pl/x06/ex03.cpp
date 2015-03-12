@@ -8,7 +8,9 @@ public:
     Rand_int( int low, int high ) 
         : m_dist{ (high-low)/2.0f, 4 }
     {
-        
+        std::random_device rd;
+
+        m_engine.seed( rd() );
     }
 
     int operator()(){
@@ -16,8 +18,8 @@ public:
     }
 
 private:
+    std::mt19937 m_engine;
     std::normal_distribution<> m_dist;
-    std::default_random_engine m_engine;
 };
 
 //------------------------------------------------------------------------------
