@@ -447,12 +447,10 @@ bool Problem5Test(){
 bool Problem6Test(){
     node * myList = nullptr;
 
-    node * p;
-
     std::vector<int> xs = { 5, 3, 1, 6, 4, 2, 12, 11, 10, 9, 8, 7 };
 
     for( auto i: xs ){
-        p = new node;
+        node * p = new node;
         p->data = i;
         p->next = nullptr;
 
