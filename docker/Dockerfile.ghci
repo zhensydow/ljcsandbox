@@ -1,0 +1,30 @@
+######################################################################
+##
+## build with:   docker build -f Dockerfile.ghci --tag ghci .
+## 
+## run with:     docker run -it --rm ghci ghci
+##       or:     docker run -it --rm ghci bash
+##
+######################################################################
+FROM haskell:7.10.3
+
+MAINTAINER Luis Cabellos <zhen.sydow@gmail.com>
+
+ENV TERM linux
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get update
+## install linux packages: e.g:
+# RUN apt-get install -y bpython
+
+RUN cabal update
+## install cabal packages: e.g:
+# RUN cabal install 'mtl >= 2.0 && < 2.3'
+
+## if your will install your haskell app
+## copy your app folder in docker
+#RUN mkdir /app
+#ADD . /app/
+#WORKDIR /app
+
+# install curren haskell app
+#RUN cabal install
