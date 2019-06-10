@@ -1,0 +1,9 @@
+# contributor: zhensydow <zhen.sydow@gmail.com>
+# name: zhen Unreal Property
+# key: UPROPERTY
+# group: starbreeze.unreal
+# expand-env: ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# --
+// ${1:Description}
+UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "${2:SBZ}")
+${3:int32} ${4:Name} = ${5:0};

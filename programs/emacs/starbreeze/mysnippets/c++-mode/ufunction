@@ -1,0 +1,13 @@
+# contributor: zhensydow <zhen.sydow@gmail.com>
+# name: zhen Unreal Function
+# key: UFUNCTION
+# group: starbreeze.unreal
+# expand-env: ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# --
+/**
+ * ${1:Description.}
+ * @param ${2:Param} - ${3:Description of Param.}
+ * @returns ${4:Return value.}
+ */
+UFUNCTION(${5:BlueprintCallable}, Category = "${6:SBZ}", ${7:meta = ()})
+${8:void} ${9:FunctionName}( const A & $2 ) ${10:const};

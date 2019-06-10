@@ -1,0 +1,19 @@
+# contributor: zhensydow <zhen.sydow@gmail.com>
+# name: zhen Unreal Class
+# key: UCLASS
+# group: starbreeze.unreal
+# expand-env: ((yas-indent-line 'node) (yas-wrap-around-region 'nil))
+# --
+/**
+ * ${1:Description.}
+ */
+UCLASS()
+class ${2:STARBREEZE_API} ${3:USBZName} : public ${4:UObject}
+{
+	GENERATED_BODY()
+
+public:
+	$0
+
+private:
+};

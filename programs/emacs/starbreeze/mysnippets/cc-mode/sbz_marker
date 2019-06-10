@@ -1,0 +1,9 @@
+# contributor: zhensydow <zhen.sydow@gmail.com>
+# name: SBZ/Marker
+# binding: C-c s m
+# key: //SBZ
+# group: starbreeze
+# --
+// SBZ ${1:name} - ${2:PROJECT-XXXX} - ${3:description}
+`yas-selected-text`$0
+// SBZ

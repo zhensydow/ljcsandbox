@@ -1,0 +1,16 @@
+# contributor: zhensydow <zhen.sydow@gmail.com>
+# name: zhen Unreal Struct
+# key: USTRUCT
+# group: starbreeze.unreal
+# expand-env: ((yas-indent-line 'none) (yas-wrap-around-region 'nil))
+# --
+/**
+ * ${1:Struct...}
+ */
+USTRUCT(${2:BlueprintType})
+struct ${3:STARBREEZE_API} ${4:FSBZNewStruct}
+{
+	GENERATED_BODY()
+
+	$0
+};

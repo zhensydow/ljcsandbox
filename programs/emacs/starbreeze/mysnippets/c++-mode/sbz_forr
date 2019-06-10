@@ -1,0 +1,9 @@
+# contributor: zhensydow <zhen.sydow@gmail.com>
+# name: zhen forr
+# key: zforr
+# group: starbreeze
+# expand-env: ((yas-indent-line 'fixed) (yas-wrap-around-region 'nil))
+# --
+for`(when zhen/yas-cc/control-space-1 " ")`(`(when zhen/yas-cc/control-space-within-pars " ")`${1:const }${2:auto &} ${3:var} : ${4:collection}`(when zhen/yas-cc/control-space-within-pars " ")`)`(if zhen/yas-cc/control-nl "\n" (when zhen/yas-cc/control-space-2 " "))`{
+    $0
+}

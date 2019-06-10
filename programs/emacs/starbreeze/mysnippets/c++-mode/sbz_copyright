@@ -1,0 +1,6 @@
+# contributor: zhensydow <zhen.sydow@gmail.com>
+# name: SBZ/Copyright
+# binding: C-c s c
+# group: starbreeze
+# --
+// Copyright `(format-time-string "%Y")` Starbreeze AB. All Rights Reserved.
