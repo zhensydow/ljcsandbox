@@ -19,3 +19,8 @@ build/
 /latex/*/*.pdf
 
 /doc/*.pdf
+
+# rust
+
+lang/rust/**/Cargo.lock
+lang/rust/**/target
